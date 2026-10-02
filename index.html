@@ -1892,19 +1892,39 @@ document.getElementById('admCloudLoginBtn').onclick=async()=>{
   const cs=document.getElementById('cloudStatus'); if(cs) cs.textContent=cloudStatusText();
 };
 document.getElementById('admChangePinBtn').onclick=async()=>{
-  const saved=localStorage.getItem('admin_pin')||'';
+  if(_cloudOn && CLOUD.adminEmail){
+    await cloudAuthWait();
+    if(!_isAdminUser){ alert('먼저 관리자로 로그인한 뒤에 비밀번호를 변경할 수 있어요.'); return; }
+    const np=await askPin('관리자 암호 변경', '새 관리자 암호를 입력하세요. (6자 이상)');
+    if(np===null) return;
+    if(np.trim().length<6){ alert('새 암호는 6자 이상으로 입력해 주세요.'); return; }
+    const np2=await askPin('새 암호 확인', '새 관리자 암호를 한 번 더 입력하세요.');
+    if(np2===null) return;
+    if(np.trim()!==np2.trim()){ alert('새 암호가 서로 일치하지 않습니다.'); return; }
+    try{
+      await _auth.currentUser.updatePassword(np.trim());
+      localStorage.setItem('cloud_admin_pw', np.trim());
+      showTip('관리자 암호를 변경했어요. (다른 기기에서는 새 암호로 로그인하세요)');
+    }catch(e){
+      const code=(e&&e.code)||'';
+      if(code==='auth/requires-recent-login'){ alert('보안을 위해 최근 로그인 상태에서만 변경할 수 있어요.\n상단 “역할 전환” 후 다시 관리자로 로그인한 다음 변경해 주세요.'); }
+      else alert('비밀번호 변경에 실패했어요.\n'+authErrMsg(code));
+    }
+    return;
+  }
+  /* 로컬 모드 */
+  const saved=localStorage.getItem('admin_pw_local')||'';
   if(!saved){ alert('설정된 관리자 암호가 없습니다.'); return; }
   const cur=await askPin('관리자 암호 변경', '현재 관리자 암호를 입력하세요.');
   if(cur===null) return;
   if(cur.trim()!==saved){ alert('현재 암호가 맞지 않습니다.'); return; }
-  const np=await askPin('새 암호 입력', '새 관리자 암호를 입력하세요. (숫자/문자 4자 이상)');
+  const np=await askPin('새 암호 입력', '새 관리자 암호를 입력하세요. (4자 이상)');
   if(np===null) return;
   if(np.trim().length<4){ alert('새 암호는 4자 이상으로 입력해 주세요.'); return; }
   const np2=await askPin('새 암호 확인', '새 관리자 암호를 한 번 더 입력하세요.');
   if(np2===null) return;
   if(np.trim()!==np2.trim()){ alert('새 암호가 서로 일치하지 않습니다. 다시 시도해 주세요.'); return; }
-  localStorage.setItem('admin_pin', np.trim());
-  localStorage.setItem('admin_session','1');
+  localStorage.setItem('admin_pw_local', np.trim());
   showTip('관리자 암호를 변경했어요.');
 };
 document.getElementById('admRefreshBtn').onclick=()=>renderAdminDash();
@@ -1989,27 +2009,51 @@ function askPin(title, msg){
   });
 }
 document.getElementById('gateAdmin').onclick=async ()=>{
-  /* 관리자 로그인 유지: “역할 전환”을 누르기 전까지는 암호 재입력 없이 관리자 상태 유지 */
-  if(localStorage.getItem('admin_session')==='1' && localStorage.getItem('admin_pin')){ await ensureAdminCloudAuth(); setRole('admin'); return; }
-  const saved=localStorage.getItem('admin_pin');
-  if(!saved){
-    const p=await askPin('관리자 암호 설정', '관리자 암호(PIN)를 새로 설정하세요. (숫자/문자 4자 이상)\n※ 학생이 관리자로 바꾸지 못하도록 막아줍니다.');
+  /* ===== 통합 관리자 로그인: PIN 없이 '관리자 암호' 하나로만 로그인 =====
+     · 클라우드 모드: 관리자 암호 = Firebase 관리자 계정 비밀번호 (이거 하나로 로그인+클라우드 권한까지 해결)
+     · 로컬 모드: 간단 관리자 암호 하나 (기기에만 저장) ===== */
+  if(_cloudOn && CLOUD.adminEmail){
+    await cloudAuthWait();
+    /* 이미 인증됨 or 저장된 암호로 자동 로그인 */
+    if(_isAdminUser){ localStorage.setItem('admin_session','1'); setRole('admin'); return; }
+    const saved=localStorage.getItem('cloud_admin_pw')||'';
+    if(saved && await cloudSignInAdmin(CLOUD.adminEmail, saved)){ localStorage.setItem('admin_session','1'); setRole('admin'); return; }
+    const typed = await askPin('관리자 로그인', '관리자 암호를 입력하세요.\n※ 처음 로그인하면 이 기기에 기억되어 다음부터는 자동 로그인됩니다.');
+    if(typed===null || !typed.trim()) return;
+    if(await cloudSignInAdmin(CLOUD.adminEmail, typed.trim())){
+      localStorage.setItem('cloud_admin_pw', typed.trim());
+      localStorage.setItem('admin_session','1');
+      showTip('관리자로 로그인됐어요.');
+      setRole('admin');
+      return;
+    }
+    /* 로그인 실패: 비밀번호 오류면 거부, 설정/도메인 문제면 잠김 방지를 위해 로컬 관리자로라도 진입 */
+    const code=_lastAuthErr;
+    if(code==='auth/wrong-password' || code==='auth/invalid-credential'){ alert('관리자 암호가 맞지 않습니다.'); return; }
+    const go = confirm('⚠️ 클라우드 관리자 로그인을 완료하지 못했어요.\n\n사유: '+authErrMsg(code)+'\n\n[확인]을 누르면 이 기기에서 관리자 화면은 열 수 있지만, 클라우드 저장·학생번호 발급은 위 문제를 해결한 뒤에만 됩니다.\n[취소]를 누르면 로그인을 중단합니다.');
+    if(go){ localStorage.setItem('admin_session','1'); setRole('admin'); }
+    return;
+  }
+  /* ===== 로컬 전용 모드(클라우드 미설정): 단일 관리자 암호 ===== */
+  const savedLocal=localStorage.getItem('admin_pw_local');
+  if(!savedLocal){
+    const p=await askPin('관리자 암호 설정', '관리자 암호를 새로 설정하세요. (4자 이상)');
     if(p===null) return;
     if(p.trim().length<4){ alert('4자 이상으로 설정해 주세요.'); return; }
-    localStorage.setItem('admin_pin', p.trim());
+    localStorage.setItem('admin_pw_local', p.trim());
+    localStorage.setItem('admin_session','1');
     showTip('관리자 암호를 설정했어요.');
-    await ensureAdminCloudAuth();
     setRole('admin');
   }else{
-    const p=await askPin('관리자 암호', '관리자 암호(PIN)를 입력하세요.');
+    const p=await askPin('관리자 로그인', '관리자 암호를 입력하세요.');
     if(p===null) return;
-    if(p.trim()===saved){ await ensureAdminCloudAuth(); setRole('admin'); }
-    else{ alert('암호가 맞지 않습니다.'); }
+    if(p.trim()===savedLocal){ localStorage.setItem('admin_session','1'); setRole('admin'); }
+    else{ alert('관리자 암호가 맞지 않습니다.'); }
   }
 };
-/* 클라우드(adminEmail 설정됨)에서만: PIN 통과 후 Firebase 관리자 계정으로도 로그인해
-   자료/음성 쓰기 권한을 얻습니다. 비밀번호는 이 브라우저에만 저장됩니다(선택). */
-async function ensureAdminCloudAuth(){
+/* 클라우드(adminEmail 설정됨)에서 Firebase 관리자 계정으로 로그인해 자료/음성 쓰기 권한을 얻습니다.
+   silent=true 면 저장된 비밀번호로 조용히 시도만 하고 비밀번호를 묻지 않습니다(페이지 로드 시). */
+async function ensureAdminCloudAuth(silent){
   if(!_cloudOn || !_auth || !CLOUD.adminEmail) return;
   await cloudAuthWait();
   if(_isAdminUser) return; // 이미 관리자로 인증됨
@@ -2018,13 +2062,14 @@ async function ensureAdminCloudAuth(){
     if(await cloudSignInAdmin(CLOUD.adminEmail, pw)){ return; }
     localStorage.removeItem('cloud_admin_pw'); // 저장된 비밀번호가 틀림 → 다시 물음
   }
-  const typed = await askPin('관리자 클라우드 로그인', 'Firebase 관리자 비밀번호를 입력하세요.\n(이메일: '+CLOUD.adminEmail+')\n※ 이 기기에서 한 번 입력하면 다음부터 자동 로그인됩니다.');
-  if(typed===null || !typed.trim()){ showTip('관리자 클라우드 로그인을 건너뛰었어요. 자료 편집은 제한됩니다.'); return; }
+  if(silent) return;
+  const typed = await askPin('관리자 로그인', '관리자 암호를 입력하세요.\n※ 이 기기에서 한 번 입력하면 다음부터 자동 로그인됩니다.');
+  if(typed===null || !typed.trim()){ showTip('관리자 로그인을 건너뛰었어요. 자료 편집·발급은 제한됩니다.'); return; }
   if(await cloudSignInAdmin(CLOUD.adminEmail, typed.trim())){
     localStorage.setItem('cloud_admin_pw', typed.trim());
-    showTip('관리자로 클라우드 인증됐어요.');
+    showTip('관리자로 로그인됐어요.');
   }else{
-    alert('☁️ 클라우드 관리자 로그인에 실패했습니다.\n\n'+authErrMsg(_lastAuthErr));
+    alert('☁️ 관리자 로그인에 실패했습니다.\n\n'+authErrMsg(_lastAuthErr));
   }
   var _cs=document.getElementById('cloudStatus'); if(_cs) _cs.textContent=cloudStatusText();
 }
@@ -2091,7 +2136,7 @@ document.getElementById('importFile').onchange=(e)=>{
   await seedIfEmpty();
   await restoreActiveStudent();
   const role=getRole();
-  if(role==='admin' && localStorage.getItem('admin_pin')){ localStorage.setItem('admin_session','1'); try{ await ensureAdminCloudAuth(); }catch(e){} }
+  if(role==='admin'){ localStorage.setItem('admin_session','1'); try{ await ensureAdminCloudAuth(true); }catch(e){} }
   if(role){ applyRole(role); await renderLibrary(); showScreen('screenLibrary'); }
   else{ document.body.classList.add('role-student'); await renderLibrary(); showScreen('screenLibrary'); showRoleGate(); }
 })();

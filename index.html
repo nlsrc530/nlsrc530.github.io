@@ -486,14 +486,15 @@ const DB_NAME='cnnez_lessons_db', STORE='lessons', ST_STORE='students';
    ==================================================================== */
 const CLOUD = {
   firebaseConfig: {
-    apiKey: "",
-    authDomain: "",
-    projectId: "",
-    storageBucket: "",
-    messagingSenderId: "",
-    appId: ""
+    apiKey: "AIzaSyDwQ2Xclo56rmNQ1PJLcY_VkRGr2RLjyYM",
+    authDomain: "testguide-m.firebaseapp.com",
+    projectId: "testguide-m",
+    storageBucket: "testguide-m.firebasestorage.app",
+    messagingSenderId: "770438000299",
+    appId: "1:770438000299:web:073db36db0e9e1fcbc11ee",
+    measurementId: "G-NTD7L7CJLT"
   },
-  adminEmail: "",
+  adminEmail: "nlsrc530@gmail.com",
   lessonsCol: "reading_lessons",
   studentsCol: "reading_students",
   audioCol:   "reading_audio",
@@ -1617,7 +1618,18 @@ function openStuModal(){
     if(!num){ err.textContent='학생번호를 입력하세요.'; return; }
     if(!pass){ err.textContent='암호를 입력하세요.'; return; }
     const id=stuId(num);
-    let stu=null; try{ stu=await dbStGet(id); }catch(e){}
+    let stu=null;
+    if(_cloudOn){
+      /* 클라우드 모드: 직접 읽어서 '연결/권한 오류'와 '진짜 번호 없음'을 구별 */
+      try{ await cloudAuthWait(); stu=await cloudGetStudent(id); }
+      catch(e){
+        console.warn('student cloud read fail', e);
+        err.textContent='서버에 연결하지 못했어요. 인터넷 연결과 접속 권한(로그인 설정)을 확인해 주세요. 그래도 계속되면 관리자에게 문의하세요.';
+        return;
+      }
+    }else{
+      try{ stu=await idbStGet(id); }catch(e){}
+    }
     if(!stu){ err.textContent='등록되지 않은 학생번호입니다. 관리자에게 문의하세요.'; return; }
     if(stu.status==='held'){ err.textContent='이용이 정지된 계정입니다. 관리자에게 문의하세요.'; return; }
     if(stu.status==='issued' && !stu.pw){
@@ -1826,6 +1838,17 @@ document.getElementById('admIssueBtn').onclick=async()=>{
   if(ex){ alert('이미 존재하는 학생번호입니다.'); return; }
   const stu={ id, num, name, pw:'', status:'issued', results:[], opened:{}, createdAt:Date.now(), lastActive:null };
   try{ await dbStPut(stu); }catch(e){}
+  /* 클라우드 모드면: 실제로 서버에 저장됐는지 다시 읽어 확인(학생 폰에서 보이려면 필수) */
+  if(_cloudOn){
+    let saved=null;
+    try{ await cloudAuthWait(); saved=await cloudGetStudent(id); }catch(e){ console.warn('issue verify fail', e); }
+    if(!saved){
+      numEl.value=''; nameEl.value='';
+      alert('⚠️ 학생번호 '+num+' 가 서버(클라우드)에 저장되지 않았어요.\n관리자 클라우드 로그인 상태(화면 상단 “🔓 관리자로 인증됨”)와 Firestore 보안 규칙을 확인해 주세요.\n지금 상태로는 학생 폰에서 이 번호로 등록할 수 없습니다.');
+      renderAdminDash();
+      return;
+    }
+  }
   numEl.value=''; nameEl.value='';
   showTip('학생번호 '+num+' 발급 완료. 학생에게 번호를 전달하세요.');
   renderAdminDash();

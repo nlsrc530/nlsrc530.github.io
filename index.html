@@ -563,9 +563,27 @@ function cloudStatusText(){
 }
 
 /* ---- Firestore: lessons (text) + audio (chunked) ---- */
+/* Firestore는 '배열 안의 배열'(중첩 배열)을 허용하지 않아 invalid-argument 오류가 납니다.
+   (예: chunks = [[{..},{..}], [..]]). 저장 전에 중첩 배열을 문자열로 감싸고, 읽을 때 다시 복원합니다. */
+function fsEncode(v){
+  if(Array.isArray(v)){
+    if(v.some(x=>Array.isArray(x))) return { __nestedArr: JSON.stringify(v) };
+    return v.map(fsEncode);
+  }
+  if(v && typeof v==='object'){ const o={}; for(const k in v){ if(v[k]!==undefined) o[k]=fsEncode(v[k]); } return o; }
+  return v;
+}
+function fsDecode(v){
+  if(Array.isArray(v)) return v.map(fsDecode);
+  if(v && typeof v==='object'){
+    if(typeof v.__nestedArr==='string'){ try{ return fsDecode(JSON.parse(v.__nestedArr)); }catch(e){ return []; } }
+    const o={}; for(const k in v){ o[k]=fsDecode(v[k]); } return o;
+  }
+  return v;
+}
 async function cloudGetAllLessons(){
   const snap=await _fs.collection(CLOUD.lessonsCol).get();
-  const out=[]; snap.forEach(d=>{ const o=d.data(); o.audio=null; o._audN=o.audN||0; o._audLen=o.audLen||0; o._cloud=true; out.push(o); });
+  const out=[]; snap.forEach(d=>{ const o=fsDecode(d.data()); o.audio=null; o._audN=o.audN||0; o._audLen=o.audLen||0; o._cloud=true; out.push(o); });
   return out;
 }
 async function ensureLessonAudio(lesson){
@@ -587,7 +605,7 @@ async function cloudPutLesson(lesson){
   delete l.audio; delete l._cloud; delete l._audN; delete l._audLen;
   if(audio){ l.audN=Math.ceil(audio.length/CLOUD.chunkSize); l.audLen=audio.length; }
   else if(lesson._audN){ l.audN=lesson._audN; l.audLen=lesson._audLen; }
-  await _fs.collection(CLOUD.lessonsCol).doc(l.id).set(l);
+  await _fs.collection(CLOUD.lessonsCol).doc(l.id).set(fsEncode(l));
   if(audio && audioChanged){
     const base=_fs.collection(CLOUD.audioCol);
     const old=await base.where('lid','==',l.id).get();
@@ -603,9 +621,9 @@ async function cloudDeleteLesson(id){
   const old=await base.where('lid','==',id).get();
   if(!old.empty){ const bt=_fs.batch(); old.forEach(d=>bt.delete(d.ref)); await bt.commit(); }
 }
-async function cloudGetAllStudents(){ const snap=await _fs.collection(CLOUD.studentsCol).get(); const out=[]; snap.forEach(d=>out.push(d.data())); return out; }
-async function cloudGetStudent(id){ const d=await _fs.collection(CLOUD.studentsCol).doc(String(id)).get(); return d.exists?d.data():undefined; }
-async function cloudPutStudent(s){ await _fs.collection(CLOUD.studentsCol).doc(String(s.id)).set(JSON.parse(JSON.stringify(s))); }
+async function cloudGetAllStudents(){ const snap=await _fs.collection(CLOUD.studentsCol).get(); const out=[]; snap.forEach(d=>out.push(fsDecode(d.data()))); return out; }
+async function cloudGetStudent(id){ const d=await _fs.collection(CLOUD.studentsCol).doc(String(id)).get(); return d.exists?fsDecode(d.data()):undefined; }
+async function cloudPutStudent(s){ await _fs.collection(CLOUD.studentsCol).doc(String(s.id)).set(fsEncode(JSON.parse(JSON.stringify(s)))); }
 async function cloudDeleteStudent(id){ await _fs.collection(CLOUD.studentsCol).doc(String(id)).delete(); }
 
 function dbOpen(){ return new Promise((res,rej)=>{ const req=indexedDB.open(DB_NAME,2); req.onupgradeneeded=()=>{ const db=req.result; if(!db.objectStoreNames.contains(STORE)) db.createObjectStore(STORE,{keyPath:'id'}); if(!db.objectStoreNames.contains(ST_STORE)) db.createObjectStore(ST_STORE,{keyPath:'id'}); }; req.onsuccess=()=>res(req.result); req.onerror=()=>rej(req.error); }); }

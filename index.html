@@ -69,15 +69,17 @@ footer{text-align:center;color:var(--sub);font-size:12px;padding:20px 0}
 .voc{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:13.5px}
 .voc b{color:var(--accent)}
 .sentline .en .w{border-radius:4px;padding:0 1px}
-.sentline .en .w.on{background:var(--hi);box-shadow:0 0 0 2px var(--hi)}
-.sentline .en .w.voc{color:var(--accent);font-weight:700;cursor:pointer}
+.sentline .en .w.on{background:transparent;box-shadow:none;text-decoration:none;font-weight:800;color:var(--accent)}
+.sentline.active .en .w.on{color:var(--accent)}
+.sentline .en .w.voc{cursor:pointer}
 .sentline.active .kr{color:var(--accent2);font-weight:600}
 #lines.showkr .kr,#lines.chunkmode .kr{display:block}
 #lines.chunkmode .sentline .en{display:flex;flex-wrap:wrap;gap:6px 12px;cursor:default;align-items:flex-end}
 .chunk{display:inline-flex;flex-direction:column;line-height:1.35;border-radius:8px;padding:2px 5px}
 .chunk .cen{font-size:16px}
 .chunk .ckr{font-size:12px;color:var(--accent2);font-weight:600}
-.chunk.on{background:var(--hi)}
+.chunk.on{background:transparent}
+.chunk.on .cen{text-decoration:none;font-weight:800;color:var(--accent)}
 #chunkToggle.active{background:linear-gradient(135deg,#b98a3f,#94682a);border-color:#8a6026;color:#fff}
 footer{text-align:center}
 footer #footTitle{color:var(--accent2);font-weight:700}
@@ -178,6 +180,46 @@ body:not(.role-student) .student-only{display:none !important}
 .quizExp{margin-top:8px;font-size:12.5px;color:var(--sub);background:var(--card);border-left:3px solid var(--accent2);border-radius:0 8px 8px 0;padding:8px 10px;line-height:1.6;white-space:pre-wrap}
 .quizScore{font-size:15px;font-weight:800;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .quizScore .big{font-size:26px;color:var(--accent)}
+/* ===== 모드 선택 허브 (중·고등학생 트렌디 디자인) ===== */
+#screenHub .hubHead{text-align:center;margin:14px 0 22px}
+#screenHub .hubHead h2{font-size:25px;margin:0 0 6px;background:linear-gradient(90deg,#6a5cff,#ff5c9d 48%,#ff9d3c);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;font-weight:900;letter-spacing:-.6px}
+#screenHub .hubHead p{margin:0;color:var(--sub);font-size:13px;font-weight:600}
+.hubGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:640px){.hubGrid{grid-template-columns:1fr}}
+.hubCard{position:relative;border:none;border-radius:24px;padding:24px 20px;color:#fff;cursor:pointer;text-align:left;overflow:hidden;min-height:164px;display:flex;flex-direction:column;justify-content:flex-end;gap:4px;box-shadow:0 14px 34px rgba(60,40,120,.22);transition:transform .14s ease,box-shadow .14s ease}
+.hubCard:hover{transform:translateY(-5px);box-shadow:0 20px 44px rgba(60,40,120,.32)}
+.hubCard:active{transform:translateY(-1px) scale(.99)}
+.hubCard .hc-emoji{font-size:40px;filter:drop-shadow(0 3px 6px rgba(0,0,0,.18));margin-bottom:auto}
+.hubCard .hc-title{font-size:20px;font-weight:900;letter-spacing:-.3px;-webkit-text-fill-color:#fff}
+.hubCard .hc-sub{font-size:12.5px;font-weight:600;opacity:.96;line-height:1.45}
+.hubCard .hc-go{position:absolute;top:16px;right:16px;background:rgba(255,255,255,.26);border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800}
+.hubCard::after{content:"";position:absolute;right:-34px;bottom:-34px;width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,.13)}
+.hub-read{background:linear-gradient(140deg,#4f7cff,#6a5cff 55%,#8b3cff)}
+.hub-voc{background:linear-gradient(140deg,#ff5c9d,#ff5c5c 55%,#ff9d3c)}
+.hub-conv{background:linear-gradient(140deg,#12d6a6,#17b3e8 60%,#4f7cff)}
+.libBackHub{background:transparent;border:1px solid var(--line);border-radius:20px;font-size:12.5px;font-weight:700;padding:5px 12px}
+/* ===== 단어학습 ===== */
+.vocMethod{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:10px 0}
+@media(max-width:560px){.vocMethod{grid-template-columns:1fr}}
+.vocMethodCard{border:2px solid var(--line);border-radius:16px;padding:15px;cursor:pointer;transition:.14s;background:var(--card)}
+.vocMethodCard:hover{border-color:#8b3cff;transform:translateY(-2px);box-shadow:0 8px 20px rgba(120,60,220,.15)}
+.vocMethodCard.sel{border-color:#8b3cff;box-shadow:0 0 0 3px rgba(139,60,255,.16)}
+.vocMethodCard .vm-ic{font-size:26px}
+.vocMethodCard .vm-t{font-weight:800;margin-top:6px}
+.vocMethodCard .vm-d{font-size:12px;color:var(--sub);margin-top:3px;line-height:1.45}
+.vocStudyCard{border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin:10px 0;background:linear-gradient(135deg,rgba(139,60,255,.055),rgba(255,92,157,.055));box-shadow:0 4px 14px var(--shadow)}
+.vocStudyCard .vsc-top{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.vocStudyCard .vsc-term{font-size:19px;font-weight:900;color:#8b3cff;cursor:pointer}
+.vocStudyCard .vsc-term:hover{text-decoration:underline}
+.vocStudyCard .vsc-kr{font-size:14px;color:var(--accent2);font-weight:700}
+.vocStudyCard .vsc-sent{font-size:16.5px;line-height:1.9;margin-top:10px}
+.vocStudyCard .vsc-sent b,.vocStudyCard .vsc-sent .vocU,.vocU{text-decoration:underline;text-decoration-color:#ff5c9d;text-decoration-thickness:3px;text-underline-offset:4px;color:#8b3cff;font-weight:800;cursor:pointer;background:none;padding:0}
+.vocStudyCard .vsc-sentkr{font-size:13px;color:var(--sub);margin-top:5px;display:none}
+.vocStudyCard .vsc-dok{color:#8b3cff;font-weight:600}
+#vocStudyList.showkr .vsc-sentkr{display:block}
+.vocBlank{display:inline-block;min-width:72px;border-bottom:3px solid #ff5c9d;margin:0 3px;text-align:center;font-weight:800;color:#8b3cff;letter-spacing:1px}
+.vocFmtSel button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 14px;font-weight:800;cursor:pointer;font-size:13.5px}
+.vocFmtSel button.sel{background:linear-gradient(120deg,#8b3cff,#ff5c9d);color:#fff;border-color:transparent}
 </style>
 </head>
 <body>
@@ -215,9 +257,21 @@ body:not(.role-student) .student-only{display:none !important}
 <header><span id="appTitle">Reading Class 학습기</span><button id="titleEditBtn" class="teacher-only" title="제목 수정(관리자)" style="background:transparent;border:none;color:inherit;font-size:15px;cursor:pointer;margin-left:8px;opacity:.75;padding:2px 6px">✏️</button><span id="roleChip"></span><button id="roleSwitchBtn">역할 전환</button><small id="hdrSub">내 학습 자료</small></header>
 <div class="wrap">
 
+  <div id="screenHub" class="screen" style="display:none">
+    <div class="hubHead">
+      <h2 id="hubHello">무엇을 공부할까요?</h2>
+      <p>오늘 학습할 모드를 골라보세요 ✨</p>
+    </div>
+    <div class="hubGrid">
+      <button class="hubCard hub-read" data-mode="read"><div class="hc-go">→</div><div class="hc-emoji">📖</div><div class="hc-title">독해 연습</div><div class="hc-sub">지문을 듣고 읽고<br>받아쓰기·이해 테스트</div></button>
+      <button class="hubCard hub-voc" data-mode="vocab"><div class="hc-go">→</div><div class="hc-emoji">🔤</div><div class="hc-title">단어 학습</div><div class="hc-sub">문장 속에서 단어를<br>익히고 테스트</div></button>
+      <button class="hubCard hub-conv" data-mode="conv"><div class="hc-go">→</div><div class="hc-emoji">💬</div><div class="hc-title">회화 연습</div><div class="hc-sub">역할을 나눠<br>실전 대화 연습</div></button>
+    </div>
+  </div>
+
   <div id="screenLibrary" class="screen">
     <div class="card">
-      <div class="toprow"><b>내 학습 자료</b><div style="display:flex;gap:6px;flex-wrap:wrap"><button id="adminDashBtn" class="primary teacher-only">👥 학생 관리</button><button id="addNewBtn" class="primary teacher-only">＋ 읽기 자료</button><button id="addConvBtn" class="primary teacher-only">💬 회화 연습</button><button id="stuReportBtn" class="ghost student-only">📊 내 성적표</button><button id="exportBtn" class="ghost teacher-only" title="모든 자료를 하나의 백업 파일(.json)로 저장합니다. 다른 기기로 옮기거나 보관할 때 사용합니다.">📦 자료 백업</button><button id="importBtn" class="ghost teacher-only" title="백업한 자료 파일(.json)을 불러옵니다.">📥 백업 불러오기</button><input type="file" id="importFile" accept="application/json,.json" style="display:none"></div></div>
+      <div class="toprow"><div style="display:flex;align-items:center;gap:8px"><button id="libBackHubBtn" class="libBackHub">← 모드</button><b id="libTitle">내 학습 자료</b></div><div style="display:flex;gap:6px;flex-wrap:wrap"><button id="adminDashBtn" class="primary teacher-only">👥 학생 관리</button><button id="addNewBtn" class="primary teacher-only">＋ 읽기 자료</button><button id="addConvBtn" class="primary teacher-only">💬 회화 연습</button><button id="addVocBtn" class="primary teacher-only" style="display:none">🔤 단어장 만들기</button><button id="stuReportBtn" class="ghost student-only">📊 내 성적표</button><button id="exportBtn" class="ghost teacher-only" title="모든 자료를 하나의 백업 파일(.json)로 저장합니다. 다른 기기로 옮기거나 보관할 때 사용합니다.">📦 자료 백업</button><button id="importBtn" class="ghost teacher-only" title="백업한 자료 파일(.json)을 불러옵니다.">📥 백업 불러오기</button><input type="file" id="importFile" accept="application/json,.json" style="display:none"></div></div>
       <input type="text" id="libSearch" class="txtIn" placeholder="🔍 키워드로 빠르게 검색 (제목·문장·단어)" style="margin:10px 0 4px">
       <div id="libCount" class="small" style="margin-bottom:6px"></div>
       <div id="libList"></div>
@@ -431,6 +485,52 @@ body:not(.role-student) .student-only{display:none !important}
       <textarea id="convVocInput" class="dict-area" style="min-height:80px"></textarea>
       <div id="convReviewWarn" class="small" style="color:var(--bad);margin-top:6px"></div>
       <button class="primary" id="convToSyncBtn" style="margin-top:10px">다음: 오디오 동기화 →</button>
+    </div>
+  </div>
+
+  <div id="screenVocNew" class="screen" style="display:none">
+    <div class="card">
+      <div class="toprow"><b>🔤 단어장 만들기</b><button class="ghost" id="vocBackLib">← 취소</button></div>
+      <p class="small">단어를 넣으면, 각 단어가 실제로 쓰인 <b>예문</b>을 AI가 찾아와요. 단어는 항상 <b>문장 속에서</b> 익히게 됩니다.<br>유의어 문제도 가능 — 예: <b>fidelity (A) selfishness (B) faithfulness (C) cruelty (D) indifference (E) weakness</b> 형식으로 입력하세요. (정답을 직접 지정하려면 보기 앞에 * 를 붙이세요: <b>(B) *faithfulness</b>)</p>
+      <div class="vocMethod">
+        <div class="vocMethodCard sel" id="vmDirect"><div class="vm-ic">⌨️</div><div class="vm-t">직접 입력</div><div class="vm-d">외우고 싶은 단어를 직접 타이핑</div></div>
+        <div class="vocMethodCard" id="vmFile"><div class="vm-ic">📄</div><div class="vm-t">파일에서 읽기</div><div class="vm-d">PDF·이미지(+MP3)에서 단어 자동 추출</div></div>
+      </div>
+      <label class="small">제목</label>
+      <input type="text" id="vocTitleInput" class="txtIn" placeholder="예: Day 1 핵심 단어">
+      <div id="vocDirectBox">
+        <label class="small">단어 입력 (한 줄에 하나 — <b>단어</b> 또는 <b>단어 - 뜻</b>)</label>
+        <textarea id="vocWordsInput" class="dict-area" style="min-height:150px" placeholder="profound - 깊은&#10;diligent&#10;in terms of - ~의 면에서&#10;fidelity (A) selfishness (B) faithfulness (C) cruelty (D) indifference (E) weakness"></textarea>
+      </div>
+      <div id="vocFileBox" style="display:none">
+        <label class="small">단어 자료 (PDF 또는 이미지)</label><br><input type="file" id="vocDocInput" accept="application/pdf,image/*"><br><br>
+        <label class="small">MP3 파일 — 선택(발음·듣기용)</label><br><input type="file" id="vocMp3Input" accept="audio/*">
+        <div id="vocFileStatus" class="small" style="margin-top:8px"></div>
+      </div>
+      <div id="vocGenStatus" class="small" style="margin-top:10px"></div>
+      <button class="primary" id="vocMakeBtn" style="margin-top:10px">✨ AI 예문 만들고 단어장 생성 →</button>
+    </div>
+  </div>
+
+  <div id="screenVocStudy" class="screen" style="display:none">
+    <div class="card">
+      <div class="toprow"><b id="vocStudyTitle"></b><button id="vocToLibBtn" class="ghost">🏠 라이브러리</button></div>
+      <audio id="vocAudio" controls style="width:100%;display:none;margin-top:8px"></audio>
+      <div class="toprow" style="margin-top:10px">
+        <div class="tabs">
+          <button id="vtabStudy" class="active">📚 단어 카드</button>
+          <button id="vtabTest">📝 문장 테스트</button>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap"><button id="vocKrToggle" class="ghost">한글 보기</button><button id="vocReadAllBtn" class="ghost">🔊 전체 듣기</button><button id="vocEditBtn" class="ghost teacher-only">✏️ 단어 편집</button></div>
+      </div>
+    </div>
+    <div class="card" id="vocPaneStudy"><div id="vocStudyList"></div></div>
+    <div class="card" id="vocPaneTest" style="display:none">
+      <div class="vocFmtSel" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+        <button id="vfmtBlank" class="sel">🔤 빈칸 채우기(문장 속)</button>
+        <button id="vfmtSyn">🧩 유의어 고르기</button>
+      </div>
+      <div id="vocTestArea"></div>
     </div>
   </div>
 
@@ -662,7 +762,7 @@ function applyAppTitle(){ const t=getAppTitle(); const el=document.getElementByI
 function getOrder(){ try{ return JSON.parse(localStorage.getItem('lib_order')||'[]'); }catch(e){ return []; } }
 function setOrder(ids){ localStorage.setItem('lib_order', JSON.stringify(ids)); }
 function sortLessons(list){ const ord=getOrder(); return list.slice().sort((a,b)=>{ let ia=ord.indexOf(a.id), ib=ord.indexOf(b.id); if(ia<0&&ib<0) return (b.createdAt||0)-(a.createdAt||0); if(ia<0) return 1; if(ib<0) return -1; return ia-ib; }); }
-function matchLesson(l,q){ if(!q) return true; q=q.toLowerCase(); if((l.title||'').toLowerCase().includes(q)) return true; if(l.vocab && l.vocab.some(v=>(v.term||'').toLowerCase().includes(q)||(v.kr||'').toLowerCase().includes(q))) return true; if(l.sentences && l.sentences.some(s=>(s.en||'').toLowerCase().includes(q)||(s.kr||'').toLowerCase().includes(q))) return true; return false; }
+function matchLesson(l,q){ if(!q) return true; q=q.toLowerCase(); if((l.title||'').toLowerCase().includes(q)) return true; if(l.vocab && l.vocab.some(v=>(v.term||'').toLowerCase().includes(q)||(v.kr||'').toLowerCase().includes(q))) return true; if(l.words && l.words.some(v=>(v.term||'').toLowerCase().includes(q)||(v.kr||'').toLowerCase().includes(q)||(v.ex_en||'').toLowerCase().includes(q))) return true; if(l.sentences && l.sentences.some(s=>(s.en||'').toLowerCase().includes(q)||(s.kr||'').toLowerCase().includes(q))) return true; return false; }
 function moveLesson(id, dir){ const ordered=sortLessons(allLessons); const ids=ordered.map(l=>l.id); const i=ids.indexOf(id); const j=i+dir; if(i<0||j<0||j>=ids.length) return; const t=ids[i]; ids[i]=ids[j]; ids[j]=t; setOrder(ids); renderLibList(); }
 async function renderLibrary(){
   try{ allLessons = await dbGetAll(); }catch(e){ allLessons=[]; }
@@ -674,17 +774,20 @@ function renderLibList(){
   const box = document.getElementById('libList');
   const cnt = document.getElementById('libCount');
   if(allLessons.length===0){ box.innerHTML='<p class="small">아직 저장된 자료가 없습니다.</p>'; if(cnt) cnt.textContent=''; return; }
-  const ordered=sortLessons(allLessons);
+  const modeList=allLessons.filter(inMode);
+  if(modeList.length===0){ box.innerHTML='<p class="small">'+(libMode==='vocab'?'아직 만든 단어장이 없어요. 위의 “🔤 단어장 만들기”로 시작하세요.':(libMode==='conv'?'아직 회화 자료가 없어요.':'아직 독해 자료가 없어요.'))+'</p>'; if(cnt) cnt.textContent=''; return; }
+  const ordered=sortLessons(modeList);
   const shown=ordered.filter(l=>matchLesson(l,libQuery));
   const reorderable = !libQuery;
-  if(cnt) cnt.textContent = libQuery ? ('검색 결과 '+shown.length+'개 / 전체 '+allLessons.length+'개') : ('전체 '+allLessons.length+'개 · 위/아래 버튼으로 순서 변경');
+  if(cnt) cnt.textContent = libQuery ? ('검색 결과 '+shown.length+'개 / 전체 '+modeList.length+'개') : ('전체 '+modeList.length+'개 · 위/아래 버튼으로 순서 변경');
   if(shown.length===0){ box.innerHTML='<p class="small">“'+html_escape(libQuery)+'” 검색 결과가 없습니다.</p>'; return; }
   box.innerHTML = shown.map((l,idx)=>{
     let extra='';
     if(libQuery){ const q=libQuery.toLowerCase(); const hits=[]; (l.vocab||[]).forEach(v=>{ if((v.term||'').toLowerCase().includes(q)||(v.kr||'').toLowerCase().includes(q)) hits.push(v.term); }); if(hits.length) extra+='<div class="small" style="color:var(--accent2)">단어 매칭: '+html_escape(hits.slice(0,6).join(', '))+'</div>'; const sh=(l.sentences||[]).find(s=>(s.en||'').toLowerCase().includes(q)||(s.kr||'').toLowerCase().includes(q)); if(sh) extra+='<div class="small" style="color:var(--accent2)">문장 매칭: '+html_escape((sh.en||sh.kr).slice(0,60))+'…</div>'; }
     const isConv = l.type==='conversation';
-    const badge = isConv ? '<span class="libBadge badge-conv">💬 회화</span>' : '<span class="libBadge badge-read">📖 읽기</span>';
-    const stat = isConv ? ('대사 '+l.sentences.length+'개 · '+((l.speakers&&l.speakers.length)||2)+'명 · '+(l.syncTimes?'✅ 연습 준비 완료':'⏱ 동기화 필요')) : ('문장 '+l.sentences.length+'개 · 단어 '+l.vocab.length+'개 · '+(l.syncTimes?'✅ 학습 준비 완료':'⏱ 동기화 필요'));
+    const isVoc = l.type==='vocab';
+    const badge = isVoc ? '<span class="libBadge" style="background:linear-gradient(135deg,#8b3cff,#ff5c9d);color:#fff">🔤 단어</span>' : (isConv ? '<span class="libBadge badge-conv">💬 회화</span>' : '<span class="libBadge badge-read">📖 읽기</span>');
+    const stat = isVoc ? ('단어 '+((l.words&&l.words.length)||0)+'개 · 문장 속 학습') : (isConv ? ('대사 '+l.sentences.length+'개 · '+((l.speakers&&l.speakers.length)||2)+'명 · '+(l.syncTimes?'✅ 연습 준비 완료':'⏱ 동기화 필요')) : ('문장 '+l.sentences.length+'개 · 단어 '+l.vocab.length+'개 · '+(l.syncTimes?'✅ 학습 준비 완료':'⏱ 동기화 필요')));
     return '<div class="sentline" style="border:1px solid var(--line)">'+
     '<div class="en" style="font-weight:700;cursor:default">'+html_escape(l.title)+badge+'</div>'+
     '<div class="small">'+stat+'</div>'+extra+
@@ -693,7 +796,7 @@ function renderLibList(){
     (reorderable?('<button data-id="'+l.id+'" data-dir="-1" class="moveBtn ghost teacher-only"'+(idx===0?' disabled':'')+'>▲ 위로</button>'+
     '<button data-id="'+l.id+'" data-dir="1" class="moveBtn ghost teacher-only"'+(idx===shown.length-1?' disabled':'')+'>▼ 아래로</button>'):'')+
     '<button data-id="'+l.id+'" class="renameBtn ghost teacher-only">✏️ 이름</button>'+
-    '<button data-id="'+l.id+'" class="printLibBtn ghost">🖖 PDF</button>'+
+    (isVoc?'':'<button data-id="'+l.id+'" class="printLibBtn ghost">🖖 PDF</button>')+
     '<button data-id="'+l.id+'" class="delBtn ghost teacher-only">삭제</button></div></div>';
   }).join('');
   box.querySelectorAll('.openBtn').forEach(b=> b.onclick=()=>openLesson(b.dataset.id));
@@ -705,6 +808,7 @@ function renderLibList(){
 function openLesson(id){
   currentLesson = allLessons.find(l=>l.id===id);
   if(!currentLesson) return;
+  if(currentLesson.type==='vocab'){ return openVocab(currentLesson); }
   if(getRole()==='student'){
     if(!activeStudent){ openStuModal(); return; }
     if(activeStudent.status==='held'){ alert('이용이 정지된 계정입니다. 관리자에게 문의하세요.'); return; }
@@ -1627,7 +1731,7 @@ async function setRole(role){
   applyRole(role);
   hideRoleGate();
   await renderLibrary();
-  showScreen('screenLibrary');
+  showHub();
 }
 /* ---------- 학생 계정/성적 시스템 ---------- */
 let activeStudent = null;
@@ -2094,6 +2198,297 @@ async function ensureAdminCloudAuth(silent){
 document.getElementById('gateBack').onclick=()=> hideRoleGate();
 document.getElementById('roleSwitchBtn').onclick=()=>{ localStorage.removeItem('admin_session'); localStorage.removeItem('cloud_admin_pw'); try{ cloudSignOutAdmin(); }catch(e){} showRoleGate(); };
 
+/* ================= 모드 허브 + 단어학습 ================= */
+let libMode='read';
+function inMode(l){ const t=l.type; if(libMode==='conv') return t==='conversation'; if(libMode==='vocab') return t==='vocab'; return t!=='conversation' && t!=='vocab'; }
+function showHub(){ const hello=document.getElementById('hubHello'); if(hello) hello.textContent=(getRole()==='student' && activeStudent && activeStudent.name)?(activeStudent.name+'님, 무엇을 공부할까요?'):'무엇을 공부할까요?'; showScreen('screenHub'); }
+function enterMode(mode){
+  libMode=mode;
+  const t=document.getElementById('libTitle');
+  if(t) t.textContent = mode==='read'?'📖 독해 연습 자료':(mode==='conv'?'💬 회화 연습 자료':'🔤 단어 학습 단어장');
+  const addR=document.getElementById('addNewBtn'), addC=document.getElementById('addConvBtn'), addV=document.getElementById('addVocBtn');
+  if(addR) addR.style.display=(mode==='read')?'':'none';
+  if(addC) addC.style.display=(mode==='conv')?'':'none';
+  if(addV) addV.style.display=(mode==='vocab')?'':'none';
+  libQuery=''; const ls=document.getElementById('libSearch'); if(ls) ls.value='';
+  renderLibList();
+  showScreen('screenLibrary');
+}
+document.querySelectorAll('.hubCard').forEach(b=> b.onclick=()=>enterMode(b.dataset.mode));
+document.getElementById('libBackHubBtn').onclick=()=>showHub();
+
+function speak(text){ try{ if(!('speechSynthesis' in window)){ showTip('이 브라우저는 음성 읽기를 지원하지 않아요.'); return; } window.speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(text); u.lang='en-US'; u.rate=0.95; window.speechSynthesis.speak(u); }catch(e){} }
+function readWord(wd){ try{ const w=String(wd||'').replace(/<[^>]*>/g,'').trim(); if(!w) return; if(!('speechSynthesis' in window)){ showTip('이 브라우저는 음성 읽기를 지원하지 않아요.'); return; } window.speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(w); u.lang='en-US'; u.rate=0.85; window.speechSynthesis.speak(u); }catch(e){} }
+function speakThen(text, cb){ let done=false; const fin=()=>{ if(done) return; done=true; try{ cb&&cb(); }catch(e){} }; try{ if(!('speechSynthesis' in window)){ setTimeout(fin, 500); return; } window.speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(text); u.lang='en-US'; u.rate=0.95; u.onend=fin; u.onerror=fin; window.speechSynthesis.speak(u); setTimeout(fin, Math.max(2800, String(text).length*95)); }catch(e){ setTimeout(fin, 500); } }
+
+/* 파일에서 단어 추출 (Gemini) */
+async function geminiExtractWords(file, statusEl){
+  const setSt=(x)=>{ if(statusEl) statusEl.textContent=x; };
+  const b64=await fileToBase64(file); const mime=file.type||'application/pdf';
+  const prompt2='이 문서/이미지에서 영어 단어·숙어와 그 한국어 뜻을 추출해 순수 JSON만 출력하세요. 형식: {"title":"제목(선택)","vocab":[{"term":"단어/숙어","kr":"뜻"}]}. 문서에 뜻이 있으면 사용하고 없으면 자연스러운 뜻을 채우세요. 만약 “fidelity (A) selfishness (B) faithfulness (C) cruelty ...” 처럼 유의어 객관식(보기 A~E) 형식이면 각 항목에 options 배열과 정답 answer도 포함하세요. 예: {"term":"fidelity","kr":"충실","options":["selfishness","faithfulness","cruelty","indifference","weakness"],"answer":"faithfulness"}. 마크다운·설명 없이 JSON만.';
+  const payload={contents:[{parts:[{text:prompt2},{inline_data:{mime_type:mime,data:b64}}]}]};
+  const models=await getGeminiModels(ensureGeminiKey());
+  for(let keyTry=0; keyTry<4; keyTry++){
+    let key=ensureGeminiKey(); if(!key) return null;
+    let backoff=3000, saw503=false;
+    for(let attempt=0; attempt<5; attempt++){
+      saw503=false;
+      for(const mm of models){
+        try{
+          const res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+mm+':generateContent?key='+encodeURIComponent(key),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+          if(res.status===404){ continue; }
+          if(res.status===503){ saw503=true; break; }
+          if(res.status===400||res.status===403){ localStorage.removeItem('gemini_key');_geminiModelsCache=null; showTip('API 키가 유효하지 않아요. 다시 입력해 주세요.'); key=null; break; }
+          const data=await res.json(); let txt=(data.candidates&&data.candidates[0]&&data.candidates[0].content&&data.candidates[0].content.parts[0].text)||'';
+          txt=txt.replace(/```json/gi,'').replace(/```/g,'').trim(); const s0=txt.indexOf('{'); const e0=txt.lastIndexOf('}'); if(s0>=0&&e0>s0) txt=txt.slice(s0,e0+1);
+          const obj=JSON.parse(txt); if(obj&&Array.isArray(obj.vocab)&&obj.vocab.length) return obj;
+        }catch(e){}
+      }
+      if(key===null) break;
+      if(saw503){ setSt('서버 혼잡(503) — '+Math.round(backoff/1000)+'초 후 재시도...'); await new Promise(r=>setTimeout(r,backoff)); backoff=Math.min(backoff*2,24000); continue; }
+      setSt('추출 재시도 중...'); await new Promise(r=>setTimeout(r,1200));
+    }
+    if(key!==null) break;
+  }
+  return null;
+}
+
+/* 각 단어의 예문을 AI가 찾기 */
+async function geminiVocabExamples(words){
+  if(!ensureGeminiKey()) return null;
+  const list=words.map((w,i)=>{ let s=(i+1)+'. '+w.term+(w.kr?(' ('+w.kr+')'):''); if(w.options&&w.options.length){ s+='  [보기: '+w.options.join(', ')+']'; } return s; }).join('\n');
+  const prompt2='다음은 영어 단어/숙어 목록입니다. 각 항목마다 (1) 그 단어가 자연스럽게 쓰인 영어 예문 ex_en 1개, (2) 그 예문의 자연스러운 한국어 번역 ex_kr, (3) 영어 어순 그대로 끊어읽는 직독직해 ex_dok(예: "She kept / her promise / to the end." → "그녀는 지켰다 / 자신의 약속을 / 끝까지"), (4) 한국어 뜻 kr 을 붙여 순수 JSON 배열만 출력하세요. [보기: ...]가 있는 항목은 그 보기 중 단어와 뜻이 가장 비슷한 유의어를 answer 로 추가하세요.\n형식: [{"term":"원래 단어 그대로","kr":"한국어 뜻","ex_en":"그 단어가 들어간 영어 예문","ex_kr":"예문의 한국어 번역","ex_dok":"/ 로 끊은 직독직해","answer":"보기가 있을 때만 유의어"}]\n규칙: ex_en에는 반드시 해당 단어(또는 활용형) 포함. 직독직해는 / 로 구분. 중·고등학생 수준으로 자연스럽게. term은 입력과 동일하게. 마크다운·설명 없이 JSON 배열만.\n목록:\n'+list;
+  const payload={contents:[{parts:[{text:prompt2}]}]};
+  const models=await getGeminiModels(ensureGeminiKey());
+  for(let keyTry=0; keyTry<4; keyTry++){
+    let key=ensureGeminiKey(); if(!key) return null;
+    let backoff=3000, saw503=false;
+    for(let attempt=0; attempt<5; attempt++){
+      saw503=false;
+      for(const mm of models){
+        try{
+          const res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+mm+':generateContent?key='+encodeURIComponent(key),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+          if(res.status===404){ continue; }
+          if(res.status===503){ saw503=true; break; }
+          if(res.status===400||res.status===403){ localStorage.removeItem('gemini_key');_geminiModelsCache=null; showTip('API 키가 유효하지 않아요.'); key=null; break; }
+          const data=await res.json(); let txt=(data.candidates&&data.candidates[0]&&data.candidates[0].content&&data.candidates[0].content.parts[0].text)||'';
+          txt=txt.replace(/```json/gi,'').replace(/```/g,'').trim(); const s0=txt.indexOf('['); const e0=txt.lastIndexOf(']'); if(s0>=0&&e0>s0) txt=txt.slice(s0,e0+1);
+          const arr=JSON.parse(txt); if(Array.isArray(arr)&&arr.length) return arr;
+        }catch(e){}
+      }
+      if(key===null) break;
+      if(saw503){ await new Promise(r=>setTimeout(r,backoff)); backoff=Math.min(backoff*2,24000); continue; }
+      await new Promise(r=>setTimeout(r,1000));
+    }
+    if(key!==null) break;
+  }
+  return null;
+}
+
+/* 한 줄 파싱: 일반 단어 또는 유의어 객관식(fidelity (A) ... (B) ...) */
+function parseVocLine(line){
+  line=String(line||'').trim(); if(!line) return null;
+  if(/\([A-Ea-e]\)/.test(line)){
+    const head=line.split(/\([A-Ea-e]\)/)[0].trim();
+    const opts=[]; let answer='';
+    const re=/\(([A-Ea-e])\)\s*([^()]+?)(?=\s*\([A-Ea-e]\)|$)/g; let m;
+    while((m=re.exec(line))){ let wd=m[2].trim(); if(/^\*/.test(wd)||/\*$/.test(wd)){ wd=wd.replace(/\*/g,'').trim(); answer=wd; } if(wd) opts.push(wd); }
+    let term=head, kr=''; const idx=head.indexOf(' - '); if(idx>=0){ term=head.slice(0,idx).trim(); kr=head.slice(idx+3).trim(); }
+    return { term:term, kr:kr, options:opts, answer:answer };
+  }
+  const idx=line.indexOf(' - ');
+  return idx>=0?{term:line.slice(0,idx).trim(),kr:line.slice(idx+3).trim()}:{term:line,kr:''};
+}
+
+/* 단어장 만들기 흐름 */
+let vocMethod='direct', vocPickedDoc=null, vocPickedMp3=null;
+document.getElementById('addVocBtn').onclick=()=>{
+  document.getElementById('vocTitleInput').value='';
+  document.getElementById('vocWordsInput').value='';
+  document.getElementById('vocDocInput').value=''; document.getElementById('vocMp3Input').value='';
+  vocPickedDoc=null; vocPickedMp3=null; vocMethod='direct';
+  document.getElementById('vmDirect').classList.add('sel'); document.getElementById('vmFile').classList.remove('sel');
+  document.getElementById('vocDirectBox').style.display='block'; document.getElementById('vocFileBox').style.display='none';
+  document.getElementById('vocGenStatus').textContent=''; document.getElementById('vocFileStatus').textContent='';
+  showScreen('screenVocNew');
+};
+document.getElementById('vocBackLib').onclick=()=>showScreen('screenLibrary');
+document.getElementById('vmDirect').onclick=()=>{ vocMethod='direct'; document.getElementById('vmDirect').classList.add('sel'); document.getElementById('vmFile').classList.remove('sel'); document.getElementById('vocDirectBox').style.display='block'; document.getElementById('vocFileBox').style.display='none'; };
+document.getElementById('vmFile').onclick=()=>{ vocMethod='file'; document.getElementById('vmFile').classList.add('sel'); document.getElementById('vmDirect').classList.remove('sel'); document.getElementById('vocFileBox').style.display='block'; document.getElementById('vocDirectBox').style.display='none'; };
+document.getElementById('vocDocInput').onchange=(e)=>{ vocPickedDoc=e.target.files[0]||null; };
+document.getElementById('vocMp3Input').onchange=(e)=>{ vocPickedMp3=e.target.files[0]||null; };
+document.getElementById('vocMakeBtn').onclick=async ()=>{
+  const st=document.getElementById('vocGenStatus');
+  const title=document.getElementById('vocTitleInput').value.trim();
+  let baseWords=[];
+  if(vocMethod==='direct'){
+    const lines=document.getElementById('vocWordsInput').value.split('\n').map(s=>s.trim()).filter(Boolean);
+    if(!lines.length){ alert('단어를 한 줄에 하나씩 입력해 주세요.'); return; }
+    baseWords=lines.map(parseVocLine).filter(Boolean);
+  } else {
+    if(!vocPickedDoc){ alert('PDF 또는 이미지 파일을 선택하거나, “직접 입력”으로 전환해 주세요.'); return; }
+    st.textContent='파일에서 단어 추출 중... (Gemini)';
+    const obj=await geminiExtractWords(vocPickedDoc, st);
+    const voc=obj&&Array.isArray(obj.vocab)?obj.vocab:[];
+    if(!voc.length){ st.textContent='단어를 추출하지 못했어요. “직접 입력”으로 넣어 주세요.'; return; }
+    if(obj.title && !title) document.getElementById('vocTitleInput').value=obj.title;
+    baseWords=voc.map(v=>({term:(v.term||'').trim(), kr:(v.kr||'').trim(), options:(Array.isArray(v.options)&&v.options.length?v.options.map(x=>String(x).trim()).filter(Boolean):null), answer:(v.answer||'').trim()})).filter(v=>v.term);
+  }
+  const seen={}; baseWords=baseWords.filter(w=>{ const k=w.term.toLowerCase(); if(seen[k]) return false; seen[k]=1; return true; });
+  st.textContent='각 단어의 예문을 찾는 중... (AI, 잠시만요)';
+  let enriched=null; try{ enriched=await geminiVocabExamples(baseWords); }catch(e){}
+  const words=baseWords.map(bw=>{ const m=enriched&&enriched.find(e=>(e.term||'').toLowerCase()===bw.term.toLowerCase()); return { term:bw.term, kr:(bw.kr||(m&&m.kr)||''), ex_en:(m&&m.ex_en)||'', ex_kr:(m&&m.ex_kr)||'', ex_dok:(m&&m.ex_dok)||'', options:(bw.options&&bw.options.length?bw.options:((m&&Array.isArray(m.options)&&m.options.length)?m.options:null)), answer:(bw.answer||(m&&m.answer)||'') }; });
+  let audio=null; if(vocMethod==='file' && vocPickedMp3){ try{ audio=await readFileAsDataURL(vocPickedMp3); }catch(e){} }
+  const finalTitle=document.getElementById('vocTitleInput').value.trim() || (vocMethod==='file'&&vocPickedDoc?vocPickedDoc.name.replace(/\.[^.]+$/,''):'단어장');
+  const set={ id:'v_'+Date.now(), type:'vocab', title:finalTitle, words:words, audio:audio, syncTimes:null, createdAt:Date.now() };
+  st.textContent='저장 중...';
+  try{ await dbPut(set); }catch(e){}
+  allLessons.push(set);
+  const made=words.filter(w=>w.ex_en).length;
+  showTip('단어장을 만들었어요. 예문 '+made+'/'+words.length+'개 생성.');
+  openVocab(set);
+};
+
+/* ---------- 단어장 학습/테스트 ---------- */
+let currentVocSet=null, VWORDS=[];
+function openVocab(set){
+  currentVocSet=set; currentLesson=set; VWORDS=set.words||[];
+  if(getRole()==='student'){
+    if(!activeStudent){ openStuModal(); return; }
+    if(activeStudent.status==='held'){ alert('이용이 정지된 계정입니다. 관리자에게 문의하세요.'); return; }
+    if(activeStudent.status!=='active'){ alert('아직 인증이 완료되지 않았어요. 학생번호로 다시 로그인해 주세요.'); return; }
+    (async()=>{ try{ const fresh=await dbStGet(activeStudent.id); if(fresh){ fresh.opened=fresh.opened||{}; fresh.opened[set.id]=Date.now(); fresh.lastActive=Date.now(); await dbStPut(fresh); activeStudent=fresh; } }catch(e){} })();
+  }
+  document.getElementById('vocStudyTitle').textContent=set.title||'단어장';
+  const au=document.getElementById('vocAudio');
+  if(set.audio){ au.src=set.audio; au.style.display='block'; } else { au.removeAttribute('src'); au.style.display='none'; }
+  const kr=document.getElementById('vocStudyList'); if(kr) kr.classList.remove('showkr');
+  const ktog=document.getElementById('vocKrToggle'); if(ktog) ktog.textContent='한글 보기';
+  vocActivateTab('study');
+  renderVocStudy();
+  showScreen('screenVocStudy');
+  (async()=>{ try{ if(!set.audio && set._audN){ showTip('음성 불러오는 중...'); await ensureLessonAudio(set); if(set.audio){ au.src=set.audio; au.style.display='block'; } } }catch(e){} })();
+}
+function vocHighlight(sent, term){
+  const esc=html_escape(sent||''); if(!term) return esc;
+  const t=term.trim().split(/\s+/)[0].replace(/[^A-Za-z\-']/g,'');
+  if(t){ try{ const re=new RegExp('('+t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\w*)','i'); if(re.test(esc)) return esc.replace(re,'<u class="vocU vocWordClick" data-w="$1">$1</u>'); }catch(e){} }
+  return esc;
+}
+function renderVocStudy(){
+  const box=document.getElementById('vocStudyList');
+  if(!VWORDS.length){ box.innerHTML='<p class="small">단어가 없어요.</p>'; return; }
+  box.innerHTML=VWORDS.map((w,i)=>{
+    let sent;
+    if(w.ex_en){
+      sent='<div class="vsc-sent">'+vocHighlight(w.ex_en,w.term)+'</div>'
+         +(w.ex_kr?'<div class="vsc-sentkr">'+html_escape(w.ex_kr)+'</div>':'')
+         +(w.ex_dok?'<div class="vsc-sentkr vsc-dok">↳ 직독직해: '+html_escape(w.ex_dok)+'</div>':'');
+    } else {
+      sent='<div class="small" style="margin-top:8px;color:var(--sub)">예문이 아직 없어요. “✏️ 단어 편집”에서 다시 만들 수 있어요.</div>';
+    }
+    return '<div class="vocStudyCard"><div class="vsc-top"><span class="vsc-term vocTermClick" data-i="'+i+'" title="클릭하면 단어를 읽어줘요">'+html_escape(w.term)+'</span><span style="display:flex;gap:8px;align-items:center"><span class="vsc-kr">'+html_escape(w.kr||'')+'</span><button class="ghost vocSayBtn" data-i="'+i+'" style="padding:4px 10px">🔊</button></span></div>'+sent+'</div>';
+  }).join('');
+  box.querySelectorAll('.vocSayBtn').forEach(b=> b.onclick=()=>{ const w=VWORDS[+b.dataset.i]; speak(w.ex_en||w.term); });
+  box.querySelectorAll('.vocTermClick').forEach(b=> b.onclick=()=>{ readWord(VWORDS[+b.dataset.i].term); });
+  box.querySelectorAll('.vocWordClick').forEach(b=> b.onclick=(e)=>{ e.stopPropagation(); readWord(b.dataset.w||b.textContent); });
+}
+function vocActivateTab(which){
+  document.getElementById('vtabStudy').classList.toggle('active', which==='study');
+  document.getElementById('vtabTest').classList.toggle('active', which==='test');
+  document.getElementById('vocPaneStudy').style.display=(which==='study')?'block':'none';
+  document.getElementById('vocPaneTest').style.display=(which==='test')?'block':'none';
+  try{ window.speechSynthesis.cancel(); }catch(e){}
+  if(which==='test') startVocSentTest();
+}
+document.getElementById('vtabStudy').onclick=()=>vocActivateTab('study');
+document.getElementById('vtabTest').onclick=()=>vocActivateTab('test');
+document.getElementById('vfmtBlank').onclick=()=>{ vtFmt='blank'; document.getElementById('vfmtBlank').classList.add('sel'); document.getElementById('vfmtSyn').classList.remove('sel'); startVocSentTest(); };
+document.getElementById('vfmtSyn').onclick=()=>{ vtFmt='syn'; document.getElementById('vfmtSyn').classList.add('sel'); document.getElementById('vfmtBlank').classList.remove('sel'); startVocSentTest(); };
+document.getElementById('vocKrToggle').onclick=(e)=>{ const el=document.getElementById('vocStudyList'); el.classList.toggle('showkr'); e.target.textContent=el.classList.contains('showkr')?'한글 숨기기':'한글 보기'; };
+document.getElementById('vocReadAllBtn').onclick=()=>{ try{ if(!('speechSynthesis' in window)){ showTip('이 브라우저는 음성 읽기를 지원하지 않아요.'); return; } window.speechSynthesis.cancel(); VWORDS.forEach(w=>{ const u=new SpeechSynthesisUtterance(w.ex_en||w.term); u.lang='en-US'; u.rate=0.95; window.speechSynthesis.speak(u); }); }catch(e){} };
+document.getElementById('vocToLibBtn').onclick=()=>{ try{ window.speechSynthesis.cancel(); }catch(e){} showScreen('screenLibrary'); renderLibrary(); };
+document.getElementById('vocEditBtn').onclick=async ()=>{
+  if(!currentVocSet) return;
+  const cur=(currentVocSet.words||[]).map(w=>{ if(w.options&&w.options.length){ return w.term+(w.kr?(' - '+w.kr):'')+' '+w.options.map((o,i)=>'('+String.fromCharCode(65+i)+') '+((w.answer&&o.toLowerCase()===String(w.answer).toLowerCase())?('*'+o):o)).join(' '); } return w.term+(w.kr?(' - '+w.kr):''); }).join('\n');
+  const v=prompt('단어 목록을 수정하세요 (한 줄에 하나). 일반: 단어 또는 단어 - 뜻 / 유의어: fidelity (A) ... (B) ... 저장하면 예문을 다시 만들어요.', cur);
+  if(v===null) return;
+  const lines=v.split('\n').map(s=>s.trim()).filter(Boolean); if(!lines.length) return;
+  const base=lines.map(parseVocLine).filter(Boolean);
+  showTip('예문을 다시 만드는 중...');
+  let enriched=null; try{ enriched=await geminiVocabExamples(base); }catch(e){}
+  currentVocSet.words=base.map(bw=>{ const m=enriched&&enriched.find(e=>(e.term||'').toLowerCase()===bw.term.toLowerCase()); return {term:bw.term, kr:(bw.kr||(m&&m.kr)||''), ex_en:(m&&m.ex_en)||'', ex_kr:(m&&m.ex_kr)||'', ex_dok:(m&&m.ex_dok)||'', options:(bw.options&&bw.options.length?bw.options:((m&&Array.isArray(m.options)&&m.options.length)?m.options:null)), answer:(bw.answer||(m&&m.answer)||'')}; });
+  VWORDS=currentVocSet.words;
+  try{ await dbPut(currentVocSet); }catch(e){}
+  renderVocStudy(); showTip('업데이트했어요.');
+};
+let vtOrder=[], vtIdx=0, vtScore=0, vtFmt='blank';
+function startVocSentTest(){
+  const area=document.getElementById('vocTestArea');
+  let testable;
+  if(vtFmt==='syn'){
+    testable=VWORDS.map((w,i)=>i).filter(i=>VWORDS[i].options&&VWORDS[i].options.length>=2&&VWORDS[i].answer);
+    if(!testable.length){ area.innerHTML='<p class="small">유의어 문제를 하려면 보기(선택지)가 있는 단어가 필요해요. 단어 입력 시 “fidelity (A) selfishness (B) faithfulness ...” 형식으로 넣으면 돼요.</p>'; return; }
+  } else {
+    testable=VWORDS.map((w,i)=>i).filter(i=>VWORDS[i].ex_en);
+    if(testable.length<1){ area.innerHTML='<p class="small">문장 테스트를 하려면 예문이 필요해요. “✏️ 단어 편집”으로 예문을 만들어 주세요.</p>'; return; }
+  }
+  vtOrder=testable.sort(()=>Math.random()-0.5); vtIdx=0; vtScore=0; renderVocTestQ();
+}
+function blankSentence(w){
+  const esc=html_escape(w.ex_en||'');
+  const t=w.term.trim().split(/\s+/)[0].replace(/[^A-Za-z\-']/g,'');
+  if(t){ try{ const re=new RegExp('('+t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\w*)','i'); if(re.test(w.ex_en||'')) return esc.replace(re,'<span class="vocBlank">______</span>'); }catch(e){} }
+  return esc+' <span class="vocBlank">______</span>';
+}
+function vtBindWordClicks(area){ area.querySelectorAll('.vocWordClick').forEach(b=> b.onclick=(e)=>{ e.stopPropagation(); readWord(b.dataset.w||b.textContent); }); }
+function vtResult(area){
+  const pct=vtOrder.length?100*vtScore/vtOrder.length:0;
+  recordStudentResult('word', pct);
+  area.innerHTML='<div class="card" style="background:var(--bg)"><b>결과: '+vtScore+' / '+vtOrder.length+'</b> ('+Math.round(pct)+'점)</div><div style="display:flex;gap:8px;margin-top:10px"><button id="vtR" class="primary">다시 풀기</button><button id="vtS" class="ghost">단어 카드로</button></div>';
+  document.getElementById('vtR').onclick=startVocSentTest;
+  document.getElementById('vtS').onclick=()=>vocActivateTab('study');
+}
+function afterAnswer(area, w){
+  const choiceEls=area.querySelectorAll('.quizChoice'); choiceEls.forEach(x=>x.disabled=true);
+  const sentEl=document.getElementById('vtSent'); if(sentEl && w.ex_en){ sentEl.innerHTML=vocHighlight(w.ex_en, w.term); vtBindWordClicks(area); }
+  const nw=document.getElementById('vtNextWrap'); if(nw) nw.style.display='block';
+  let advanced=false; const go=()=>{ if(advanced) return; advanced=true; vtIdx++; renderVocTestQ(); };
+  const nextBtn=document.getElementById('vtNext'); if(nextBtn) nextBtn.onclick=()=>{ try{ window.speechSynthesis.cancel(); }catch(e){} go(); };
+  speakThen(w.ex_en||w.term, go);
+}
+function renderVocTestQ(){
+  const area=document.getElementById('vocTestArea');
+  if(vtIdx>=vtOrder.length){ vtResult(area); return; }
+  const w=VWORDS[vtOrder[vtIdx]];
+  if(vtFmt==='syn'){ return renderSynQ(area, w); }
+  let choices=[w.term];
+  const pool=VWORDS.filter(x=>x.term!==w.term);
+  let guard=0;
+  while(choices.length<4 && choices.length<pool.length+1 && guard<40){ const c=pool[Math.floor(Math.random()*pool.length)].term; if(!choices.includes(c)) choices.push(c); guard++; }
+  choices.sort(()=>Math.random()-0.5);
+  area.innerHTML='<div class="small">'+(vtIdx+1)+' / '+vtOrder.length+' · 점수 '+vtScore+'</div>'+
+    '<p class="small" style="margin-top:8px">빈칸에 알맞은 단어를 고르세요.</p>'+
+    '<div class="vocStudyCard"><div class="vsc-sent" id="vtSent">'+blankSentence(w)+'</div>'+(w.ex_kr?'<div class="vsc-sentkr" style="display:block">'+html_escape(w.ex_kr)+'</div>':'')+(w.ex_dok?'<div class="vsc-sentkr vsc-dok" style="display:block">↳ 직독직해: '+html_escape(w.ex_dok)+'</div>':'')+'</div>'+
+    '<div style="margin-top:10px">'+choices.map(c=>'<button class="quizChoice" data-c="'+html_escape(c)+'">'+html_escape(c)+'</button>').join('')+'</div>'+
+    '<div id="vtNextWrap" style="margin-top:10px;display:none"><button id="vtNext" class="primary">다음 ▶</button></div>';
+  const choiceEls=area.querySelectorAll('.quizChoice');
+  choiceEls.forEach(b=>{ b.onclick=()=>{ const ok=b.dataset.c===w.term; b.style.background=ok?'var(--ok)':'var(--bad)'; b.style.color='#fff'; b.style.borderColor='transparent'; if(ok){ vtScore++; } else { choiceEls.forEach(x=>{ if(x.dataset.c===w.term){ x.style.background='var(--ok)'; x.style.color='#fff'; x.style.borderColor='transparent'; } }); } afterAnswer(area, w); }; });
+}
+function renderSynQ(area, w){
+  const shuffled=(w.options||[]).slice().sort(()=>Math.random()-0.5);
+  const sentHtml = w.ex_en ? vocHighlight(w.ex_en, w.term) : ('<u class="vocU vocWordClick" data-w="'+html_escape(w.term)+'">'+html_escape(w.term)+'</u>');
+  area.innerHTML='<div class="small">'+(vtIdx+1)+' / '+vtOrder.length+' · 점수 '+vtScore+'</div>'+
+    '<p class="small" style="margin-top:8px">밑줄 친 단어와 뜻이 가장 비슷한 것을 고르세요.</p>'+
+    '<div class="vocStudyCard"><div class="vsc-sent" id="vtSent">'+sentHtml+'</div>'+(w.ex_kr?'<div class="vsc-sentkr" style="display:block">'+html_escape(w.ex_kr)+'</div>':'')+(w.ex_dok?'<div class="vsc-sentkr vsc-dok" style="display:block">↳ 직독직해: '+html_escape(w.ex_dok)+'</div>':'')+'</div>'+
+    '<div style="margin-top:10px">'+shuffled.map((c,i)=>'<button class="quizChoice" data-c="'+html_escape(c)+'">('+String.fromCharCode(65+i)+') '+html_escape(c)+'</button>').join('')+'</div>'+
+    '<div id="vtNextWrap" style="margin-top:10px;display:none"><button id="vtNext" class="primary">다음 ▶</button></div>';
+  vtBindWordClicks(area);
+  const ans=String(w.answer||'').toLowerCase();
+  const choiceEls=area.querySelectorAll('.quizChoice');
+  choiceEls.forEach(b=>{ b.onclick=()=>{ const ok=b.dataset.c.toLowerCase()===ans; b.style.background=ok?'var(--ok)':'var(--bad)'; b.style.color='#fff'; b.style.borderColor='transparent'; if(ok){ vtScore++; } else { choiceEls.forEach(x=>{ if(x.dataset.c.toLowerCase()===ans){ x.style.background='var(--ok)'; x.style.color='#fff'; x.style.borderColor='transparent'; } }); } afterAnswer(area, w); }; });
+}
+
 /* ---------- 자료 내보내기 / 가져오기 (기기 간 공유) ---------- */
 document.getElementById('exportBtn').onclick=async ()=>{
   let lessons=[]; try{ lessons=await dbGetAll(); }catch(e){}
@@ -2155,8 +2550,8 @@ document.getElementById('importFile').onchange=(e)=>{
   await restoreActiveStudent();
   const role=getRole();
   if(role==='admin'){ localStorage.setItem('admin_session','1'); try{ await ensureAdminCloudAuth(true); }catch(e){} }
-  if(role){ applyRole(role); await renderLibrary(); showScreen('screenLibrary'); }
-  else{ document.body.classList.add('role-student'); await renderLibrary(); showScreen('screenLibrary'); showRoleGate(); }
+  if(role){ applyRole(role); await renderLibrary(); showHub(); }
+  else{ document.body.classList.add('role-student'); await renderLibrary(); showHub(); showRoleGate(); }
 })();
 </script>
 </body>

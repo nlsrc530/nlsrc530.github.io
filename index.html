@@ -628,9 +628,21 @@ function cloudInit(){
         let done=false;
         _auth.onAuthStateChanged(u=>{
           _isAdminUser = !!(u && u.email && CLOUD.adminEmail && u.email.toLowerCase()===CLOUD.adminEmail.toLowerCase());
-          if(!done){ done=true; resolve(u); }
+          if(!done){
+            done=true;
+            if(u){
+              /* 이미 로그인된 세션(관리자 이메일 또는 익명)이 복원된 경우:
+                 그대로 유지한다. (예전에는 여기서 무조건 signInAnonymously를 호출해
+                 복원된 관리자 세션을 익명으로 덮어써버려 쓰기 권한이 사라졌다.) */
+              resolve(u);
+            }else{
+              /* 로그인 상태가 전혀 없을 때만 익명으로 로그인(학생 읽기용). */
+              _auth.signInAnonymously()
+                .then(cred=>resolve((cred&&cred.user)||null))
+                .catch(e=>{ console.warn('anon sign-in fail', e); resolve(null); });
+            }
+          }
         });
-        _auth.signInAnonymously().catch(e=>{ console.warn('anon sign-in fail', e); if(!done){ done=true; resolve(null); } });
       });
     }else{
       _authReady = Promise.resolve(null);
@@ -742,7 +754,7 @@ async function dbPut(lesson){ let cloud=null, local=false; if(_cloudOn){ try{ aw
 async function dbDelete(id){ if(_cloudOn){ try{ await cloudAuthWait(); await cloudDeleteLesson(id); }catch(e){ console.warn(e); } } try{ await idbDelete(id); }catch(e){} }
 async function dbStGetAll(){ if(_cloudOn){ try{ await cloudAuthWait(); return await cloudGetAllStudents(); }catch(e){ console.warn(e); } } return await idbStGetAll(); }
 async function dbStGet(id){ if(_cloudOn){ try{ await cloudAuthWait(); const s=await cloudGetStudent(id); if(s!==undefined) return s; }catch(e){ console.warn(e); } } return await idbStGet(id); }
-async function dbStPut(stu){ if(_cloudOn){ try{ await cloudAuthWait(); await cloudPutStudent(stu); }catch(e){ console.warn(e); } } try{ await idbStPut(stu); }catch(e){} }
+async function dbStPut(stu){ if(_cloudOn){ try{ await cloudAuthWait(); await cloudPutStudent(stu); _lastDbErr=''; }catch(e){ _lastDbErr=(e&&e.code)||(e&&e.message)||'cloud-put-fail'; console.warn('cloud student put fail',e); } } try{ await idbStPut(stu); }catch(e){} }
 async function dbStDelete(id){ if(_cloudOn){ try{ await cloudAuthWait(); await cloudDeleteStudent(id); }catch(e){ console.warn(e); } } try{ await idbStDelete(id); }catch(e){} }
 
 async function seedIfEmpty(){
@@ -1975,14 +1987,16 @@ document.getElementById('admIssueBtn').onclick=async()=>{
   let ex=null; try{ ex=await dbStGet(id); }catch(e){}
   if(ex){ alert('이미 존재하는 학생번호입니다.'); return; }
   const stu={ id, num, name, pw:'', status:'issued', results:[], opened:{}, createdAt:Date.now(), lastActive:null };
+  _lastDbErr='';
   try{ await dbStPut(stu); }catch(e){}
   /* 클라우드 모드면: 실제로 서버에 저장됐는지 다시 읽어 확인(학생 폰에서 보이려면 필수) */
   if(_cloudOn){
     let saved=null;
-    try{ await cloudAuthWait(); saved=await cloudGetStudent(id); }catch(e){ console.warn('issue verify fail', e); }
+    try{ await cloudAuthWait(); saved=await cloudGetStudent(id); }catch(e){ console.warn('issue verify fail', e); if(!_lastDbErr) _lastDbErr=(e&&e.code)||(e&&e.message)||'read-fail'; }
     if(!saved){
       numEl.value=''; nameEl.value='';
-      alert('⚠️ 학생번호 '+num+' 가 서버(클라우드)에 저장되지 않았어요.\n관리자 클라우드 로그인 상태(화면 상단 “🔓 관리자로 인증됨”)와 Firestore 보안 규칙을 확인해 주세요.\n지금 상태로는 학생 폰에서 이 번호로 등록할 수 없습니다.');
+      const reason = _lastDbErr ? ('\n\nℹ️ 실제 사유: '+authErrMsg(_lastDbErr)) : '';
+      alert('⚠️ 학생번호 '+num+' 가 서버(클라우드)에 저장되지 않았어요.\n관리자 클라우드 로그인 상태(화면 상단 “🔓 관리자로 인증됨”)와 Firestore 보안 규칙(게시/Publish 여부)을 확인해 주세요.\n지금 상태로는 학생 폰에서 이 번호로 등록할 수 없습니다.'+reason);
       renderAdminDash();
       return;
     }

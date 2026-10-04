@@ -1714,7 +1714,8 @@ document.getElementById('quizSubmit').onclick=()=>gradeQuiz();
 /* ---------- 역할(관리자/학생) 분리 ---------- */
 function getRole(){ return localStorage.getItem('user_role'); }
 function applyRole(role){
-  const isStu = role==='student';
+  /* 명시적으로 'admin'이 아닌 모든 값은 학생으로 취급한다(기본값=학생, 강생 화면 누수 방지). */
+  const isStu = role!=='admin';
   document.body.classList.toggle('role-student', isStu);
   const chip=document.getElementById('roleChip');
   if(chip) chip.textContent = isStu ? '🧑‍🎓 학생' : '👩‍🏫 관리자';
@@ -2149,11 +2150,16 @@ document.getElementById('gateAdmin').onclick=async ()=>{
       setRole('admin');
       return;
     }
-    /* 로그인 실패: 비밀번호 오류면 거부, 설정/도메인 문제면 잠김 방지를 위해 로컬 관리자로라도 진입 */
+    /* 로그인 실패: 어떤 경우에도 관리자 화면을 열지 않는다(보안).
+       서버(Firebase) 인증에 성공해야만 관리자 모드로 진입할 수 있다.
+       과거에는 도메인/설정 오류 시 '잠김 방지'를 구실로 로컬 관리자 화면을 열어주어
+       학생이 관리자 버튼을 눌러 강사 화면에 진입하는 문제가 있어 제거했다. */
     const code=_lastAuthErr;
-    if(code==='auth/wrong-password' || code==='auth/invalid-credential'){ alert('관리자 암호가 맞지 않습니다.'); return; }
-    const go = confirm('⚠️ 클라우드 관리자 로그인을 완료하지 못했어요.\n\n사유: '+authErrMsg(code)+'\n\n[확인]을 누르면 이 기기에서 관리자 화면은 열 수 있지만, 클라우드 저장·학생번호 발급은 위 문제를 해결한 뒤에만 됩니다.\n[취소]를 누르면 로그인을 중단합니다.');
-    if(go){ localStorage.setItem('admin_session','1'); setRole('admin'); }
+    if(code==='auth/wrong-password' || code==='auth/invalid-credential'){
+      alert('관리자 암호가 맞지 않습니다.');
+    }else{
+      alert('☁️ 관리자 로그인에 실패하여 관리자 화면을 열 수 없습니다.\n\n'+authErrMsg(code));
+    }
     return;
   }
   /* ===== 로컬 전용 모드(클라우드 미설정): 단일 관리자 암호 ===== */
@@ -2196,7 +2202,14 @@ async function ensureAdminCloudAuth(silent){
   var _cs=document.getElementById('cloudStatus'); if(_cs) _cs.textContent=cloudStatusText();
 }
 document.getElementById('gateBack').onclick=()=> hideRoleGate();
-document.getElementById('roleSwitchBtn').onclick=()=>{ localStorage.removeItem('admin_session'); localStorage.removeItem('cloud_admin_pw'); try{ cloudSignOutAdmin(); }catch(e){} showRoleGate(); };
+document.getElementById('roleSwitchBtn').onclick=()=>{
+  /* 역할 전환: 관리자 세션·저장된 암호를 모두 비우고, 화면을 즉시 학생 보기로 내린 뒤
+     서버에서 로그아웃한다. 새 역할은 반드시 게이트에서 다시 선택·인증해야 한다. */
+  localStorage.removeItem('admin_session'); localStorage.removeItem('cloud_admin_pw'); localStorage.removeItem('user_role');
+  applyRole('student');
+  try{ cloudSignOutAdmin(); }catch(e){}
+  showRoleGate();
+};
 
 /* ================= 모드 허브 + 단어학습 ================= */
 let libMode='read';
@@ -2548,8 +2561,21 @@ document.getElementById('importFile').onchange=(e)=>{
   applyAppTitle();
   await seedIfEmpty();
   await restoreActiveStudent();
-  const role=getRole();
-  if(role==='admin'){ localStorage.setItem('admin_session','1'); try{ await ensureAdminCloudAuth(true); }catch(e){} }
+  let role=getRole();
+  if(role==='admin'){
+    if(_cloudOn && CLOUD.adminEmail){
+      /* 클라우드 모드: 저장된 역할 값(user_role)만으로는 관리자 화면을 열지 않는다.
+         반드시 Firebase 관리자 계정으로 서버 인증에 성공해야만 관리자 상태를 유지한다.
+         인증 실패 시 학생/역할 선택 화면으로 강등해 학생에게 강사 화면이 뜨는 것을 막는다. */
+      try{ await ensureAdminCloudAuth(true); }catch(e){}
+      if(_isAdminUser){ localStorage.setItem('admin_session','1'); }
+      else{ localStorage.removeItem('admin_session'); localStorage.removeItem('user_role'); role=null; }
+    }else{
+      /* 로컬 전용 모드(클라우드 미설정): 서버가 없으므로 로컬 관리자 암호가 설정된 경우에만 관리자 유지. */
+      if(localStorage.getItem('admin_pw_local')){ localStorage.setItem('admin_session','1'); }
+      else{ localStorage.removeItem('admin_session'); localStorage.removeItem('user_role'); role=null; }
+    }
+  }
   if(role){ applyRole(role); await renderLibrary(); showHub(); }
   else{ document.body.classList.add('role-student'); await renderLibrary(); showHub(); showRoleGate(); }
 })();

@@ -184,7 +184,8 @@ body:not(.role-student) .student-only{display:none !important}
 #screenHub .hubHead{text-align:center;margin:14px 0 22px}
 #screenHub .hubHead h2{font-size:25px;margin:0 0 6px;background:linear-gradient(90deg,#6a5cff,#ff5c9d 48%,#ff9d3c);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;font-weight:900;letter-spacing:-.6px}
 #screenHub .hubHead p{margin:0;color:var(--sub);font-size:13px;font-weight:600}
-.hubGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.hubGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+@media(max-width:900px){.hubGrid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:640px){.hubGrid{grid-template-columns:1fr}}
 .hubCard{position:relative;border:none;border-radius:24px;padding:24px 20px;color:#fff;cursor:pointer;text-align:left;overflow:hidden;min-height:164px;display:flex;flex-direction:column;justify-content:flex-end;gap:4px;box-shadow:0 14px 34px rgba(60,40,120,.22);transition:transform .14s ease,box-shadow .14s ease}
 .hubCard:hover{transform:translateY(-5px);box-shadow:0 20px 44px rgba(60,40,120,.32)}
@@ -197,6 +198,7 @@ body:not(.role-student) .student-only{display:none !important}
 .hub-read{background:linear-gradient(140deg,#4f7cff,#6a5cff 55%,#8b3cff)}
 .hub-voc{background:linear-gradient(140deg,#ff5c9d,#ff5c5c 55%,#ff9d3c)}
 .hub-conv{background:linear-gradient(140deg,#12d6a6,#17b3e8 60%,#4f7cff)}
+.hub-myeng{background:linear-gradient(140deg,#845ef7,#5c7cff 55%,#12d6a6)}
 .libBackHub{background:transparent;border:1px solid var(--line);border-radius:20px;font-size:12.5px;font-weight:700;padding:5px 12px}
 /* ===== 단어학습 ===== */
 .vocMethod{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:10px 0}
@@ -266,12 +268,13 @@ body:not(.role-student) .student-only{display:none !important}
       <button class="hubCard hub-read" data-mode="read"><div class="hc-go">→</div><div class="hc-emoji">📖</div><div class="hc-title">독해 연습</div><div class="hc-sub">지문을 듣고 읽고<br>받아쓰기·이해 테스트</div></button>
       <button class="hubCard hub-voc" data-mode="vocab"><div class="hc-go">→</div><div class="hc-emoji">🔤</div><div class="hc-title">단어 학습</div><div class="hc-sub">문장 속에서 단어를<br>익히고 테스트</div></button>
       <button class="hubCard hub-conv" data-mode="conv"><div class="hc-go">→</div><div class="hc-emoji">💬</div><div class="hc-title">회화 연습</div><div class="hc-sub">역할을 나눠<br>실전 대화 연습</div></button>
+      <button class="hubCard hub-myeng" data-mode="myeng"><div class="hc-go">→</div><div class="hc-emoji">📷</div><div class="hc-title">나만의 영어</div><div class="hc-sub">사진 찍어 올리면<br>나만의 학습 자료로</div></button>
     </div>
   </div>
 
   <div id="screenLibrary" class="screen">
     <div class="card">
-      <div class="toprow"><div style="display:flex;align-items:center;gap:8px"><button id="libBackHubBtn" class="libBackHub">← 모드</button><b id="libTitle">내 학습 자료</b></div><div style="display:flex;gap:6px;flex-wrap:wrap"><button id="adminDashBtn" class="primary teacher-only">👥 학생 관리</button><button id="addNewBtn" class="primary teacher-only">＋ 읽기 자료</button><button id="addConvBtn" class="primary teacher-only">💬 회화 연습</button><button id="addVocBtn" class="primary teacher-only" style="display:none">🔤 단어장 만들기</button><button id="stuReportBtn" class="ghost student-only">📊 내 성적표</button><button id="exportBtn" class="ghost teacher-only" title="모든 자료를 하나의 백업 파일(.json)로 저장합니다. 다른 기기로 옮기거나 보관할 때 사용합니다.">📦 자료 백업</button><button id="importBtn" class="ghost teacher-only" title="백업한 자료 파일(.json)을 불러옵니다.">📥 백업 불러오기</button><input type="file" id="importFile" accept="application/json,.json" style="display:none"></div></div>
+      <div class="toprow"><div style="display:flex;align-items:center;gap:8px"><button id="libBackHubBtn" class="libBackHub">← 모드</button><b id="libTitle">내 학습 자료</b></div><div style="display:flex;gap:6px;flex-wrap:wrap"><button id="adminDashBtn" class="primary teacher-only">👥 학생 관리</button><button id="addNewBtn" class="primary teacher-only">＋ 읽기 자료</button><button id="addConvBtn" class="primary teacher-only">💬 회화 연습</button><button id="addVocBtn" class="primary teacher-only" style="display:none">🔤 단어장 만들기</button><button id="addMyEngBtn" class="primary" style="display:none">📷 사진으로 만들기</button><button id="stuReportBtn" class="ghost student-only">📊 내 성적표</button><button id="exportBtn" class="ghost teacher-only" title="모든 자료를 하나의 백업 파일(.json)로 저장합니다. 다른 기기로 옮기거나 보관할 때 사용합니다.">📦 자료 백업</button><button id="importBtn" class="ghost teacher-only" title="백업한 자료 파일(.json)을 불러옵니다.">📥 백업 불러오기</button><input type="file" id="importFile" accept="application/json,.json" style="display:none"></div></div>
       <input type="text" id="libSearch" class="txtIn" placeholder="🔍 키워드로 빠르게 검색 (제목·문장·단어)" style="margin:10px 0 4px">
       <div id="libCount" class="small" style="margin-bottom:6px"></div>
       <div id="libList"></div>
@@ -281,7 +284,7 @@ body:not(.role-student) .student-only{display:none !important}
 
   <div id="screenAdmin" class="screen" style="display:none">
     <div class="card">
-      <div class="toprow"><b>👥 학생 관리</b><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="ghost" id="admCloudLoginBtn">☁️ 클라우드 관리자 로그인</button><button class="ghost" id="admChangePinBtn">🔑 관리자 암호 변경</button><button class="ghost" id="admBackBtn">🏠 라이브러리</button></div></div>
+      <div class="toprow"><b>👥 학생 관리</b><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="ghost" id="admCloudLoginBtn">☁️ 클라우드 관리자 로그인</button><button class="ghost" id="admGeminiKeyBtn" title="학생들이 사진 분석 시 API 키를 매번 입력하지 않도록, 관리자 Gemini 키를 클라우드에 1번만 등록합니다.">🤖 Gemini 키 공유</button><button class="ghost" id="admChangePinBtn">🔑 관리자 암호 변경</button><button class="ghost" id="admBackBtn">🏠 라이브러리</button></div></div>
       <div id="cloudStatus" class="small" style="margin:2px 0 8px;padding:6px 10px;border-radius:8px;background:var(--hi);display:inline-block"></div>
       <p class="small">학생에게 학생번호를 발급하면, 학생은 그 번호와 비밀번호로 로그인해 인증합니다. 학습 진행·테스트 성적(받아쓰기·단어·이해 테스트)을 인포그래픽으로 한눈에 보고, 학생별 성적표를 PDF로 출력할 수 있습니다. 아래 표에서 학생을 체크한 뒤 “선택 학생 성적표 PDF”를 누르면 여러 명의 성적표를 한 번에 뽑을 수 있습니다.</p>
       <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px"><button id="admPdfSelBtn" class="primary">🖨 선택 학생 성적표 PDF</button><button id="admRefreshBtn" class="ghost">↻ 새로고침</button><button id="admImportBtn" class="ghost" title="다른 기기에서 만든 학생 결과 백업 파일(.json)을 이 기기로 합칠 때만 사용합니다(선택 기능).">📥 결과 파일 병합(선택)</button><input type="file" id="admImportFile" accept="application/json,.json" style="display:none"></div>
@@ -345,6 +348,21 @@ body:not(.role-student) .student-only{display:none !important}
     </div>
   </div>
 
+  <div id="screenMyEng" class="screen" style="display:none">
+    <div class="card">
+      <div class="toprow"><b>📷 나만의 영어 만들기</b><button class="ghost" id="myEngBackLib">← 취소</button></div>
+      <p class="small">교과서·문제지·책 등 영어 지문을 휴대폰으로 찍거나 사진을 올리면, 글자를 읽어(OCR) 영어 본문을 추출하고 직독직해·해설·음성 읽기·이해 테스트를 자동으로 만들어 드려요. (무료 Gemini 키 사용)</p>
+      <p class="small" style="color:var(--accent2)">⌛ 학생이 만든 자료는 내 기기에만 저장되며, 만든 지 1시간 뒤 자동으로 삭제됩니다.</p>
+      <label class="small">제목 (선택 사항)</label>
+      <input type="text" id="myEngTitle" class="txtIn" placeholder="예: 오늘의 영어 지문">
+      <label class="small" style="margin-top:8px;display:block">영어 지문 사진 (여러 장 가능)</label>
+      <input type="file" id="myEngImg" accept="image/*" capture="environment" multiple>
+      <div id="myEngPreview" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px"></div>
+      <div style="margin-top:12px"><button class="primary" id="myEngGoBtn" disabled>✨ 사진 분석해서 만들기</button></div>
+      <div id="myEngStatus" class="small" style="margin-top:8px"></div>
+    </div>
+  </div>
+
   <div id="screenSync" class="screen" style="display:none">
     <div class="card">
       <div class="toprow"><b>3) 오디오 동기화</b><button class="ghost" id="backLib3">🏠 라이브러리</button></div>
@@ -385,7 +403,7 @@ body:not(.role-student) .student-only{display:none !important}
           <button id="tabQuiz">📝 이해 테스트</button>
           <button id="tabAdjust" class="teacher-only">경계 조정</button>
         </div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap"><button id="wsyncToggle" class="ghost">단어싱크 끄기</button><button id="chunkToggle" class="ghost">직독직해</button><button id="aiChunkBtn" class="ghost teacher-only" style="display:none">🤖 AI 직독</button><button id="aiExplainBtn" class="ghost teacher-only">🧠 AI 해설</button><button id="krToggle" class="ghost">한글 보기</button><button id="editToggle" class="ghost teacher-only">✏️ 편집</button><button id="printBtn" class="ghost">🖨 PDF</button><button id="resyncBtn" class="ghost teacher-only">재동기화</button></div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap"><button id="wsyncToggle" class="ghost">단어싱크 끄기</button><button id="chunkToggle" class="ghost">직독직해</button><button id="aiChunkBtn" class="ghost teacher-only" style="display:none">🤖 AI 직독</button><button id="aiExplainBtn" class="ghost teacher-only">🧠 AI 해설</button><button id="krToggle" class="ghost">한글 보기</button><button id="editToggle" class="ghost teacher-only">✏️ 편집</button><button id="printBtn" class="ghost">🖨 PDF</button><button id="ttsReadBtn" class="ghost" style="display:none">🔊 본문 읽기</button><button id="resyncBtn" class="ghost teacher-only">재동기화</button></div>
       </div>
     </div>
 
@@ -598,6 +616,7 @@ const CLOUD = {
   lessonsCol: "reading_lessons",
   studentsCol: "reading_students",
   audioCol:   "reading_audio",
+  settingsCol:"reading_settings",
   chunkSize:  700000
 };
 let _fs=null, _cloudOn=false, _auth=null, _authReady=null, _isAdminUser=false, _lastAuthErr='', _lastDbErr='';
@@ -737,6 +756,19 @@ async function cloudGetAllStudents(){ const snap=await _fs.collection(CLOUD.stud
 async function cloudGetStudent(id){ const d=await _fs.collection(CLOUD.studentsCol).doc(String(id)).get(); return d.exists?fsDecode(d.data()):undefined; }
 async function cloudPutStudent(s){ await _fs.collection(CLOUD.studentsCol).doc(String(s.id)).set(fsEncode(JSON.parse(JSON.stringify(s)))); }
 async function cloudDeleteStudent(id){ await _fs.collection(CLOUD.studentsCol).doc(String(id)).delete(); }
+/* ---- 공유 Gemini 키: 관리자가 클라우드에 1번만 저장 → 모든 학생 기기가 자동으로 받아 사용 ----
+   (중요) 키는 공개 GitHub HTML이 아니라, 학원 전용 Firestore(학생 자료가 들어있는 그 저장소)에만 보관한다.
+   따라서 소스 보기로 아무나 키를 가져가는 일은 없고, 교체/폐기도 콘솔에서 바로 가능하다. */
+async function cloudGetSharedGeminiKey(){
+  if(!_cloudOn) return null;
+  try{ await cloudAuthWait(); const d=await _fs.collection(CLOUD.settingsCol).doc('shared').get(); if(d.exists){ const k=(d.data()&&d.data().geminiKey)||''; return (k||'').trim()||null; } }catch(e){ console.warn('shared key read fail', e); }
+  return null;
+}
+async function cloudSetSharedGeminiKey(key){
+  if(!_cloudOn) throw new Error('no-cloud');
+  await cloudAuthWait();
+  await _fs.collection(CLOUD.settingsCol).doc('shared').set({geminiKey:(key||'').trim(), updatedAt:Date.now()}, {merge:true});
+}
 
 function dbOpen(){ return new Promise((res,rej)=>{ const req=indexedDB.open(DB_NAME,2); req.onupgradeneeded=()=>{ const db=req.result; if(!db.objectStoreNames.contains(STORE)) db.createObjectStore(STORE,{keyPath:'id'}); if(!db.objectStoreNames.contains(ST_STORE)) db.createObjectStore(ST_STORE,{keyPath:'id'}); }; req.onsuccess=()=>res(req.result); req.onerror=()=>rej(req.error); }); }
 async function idbGetAll(){ const db=await dbOpen(); return new Promise((res,rej)=>{ const tx=db.transaction(STORE,'readonly'); const req=tx.objectStore(STORE).getAll(); req.onsuccess=()=>res(req.result); req.onerror=()=>rej(req.error); }); }
@@ -778,16 +810,27 @@ function matchLesson(l,q){ if(!q) return true; q=q.toLowerCase(); if((l.title||'
 function moveLesson(id, dir){ const ordered=sortLessons(allLessons); const ids=ordered.map(l=>l.id); const i=ids.indexOf(id); const j=i+dir; if(i<0||j<0||j>=ids.length) return; const t=ids[i]; ids[i]=ids[j]; ids[j]=t; setOrder(ids); renderLibList(); }
 async function renderLibrary(){
   try{ allLessons = await dbGetAll(); }catch(e){ allLessons=[]; }
+  /* 나만의 영어(로컬 전용) 자료를 병합 — 클라우드 모드에서도 내 기기에 저장된 자료가 보이도록 */
+  try{ const loc=await idbGetAll(); const seen=new Set((allLessons||[]).map(l=>l.id)); (loc||[]).forEach(l=>{ if(l && l.type==='myeng' && !seen.has(l.id)){ allLessons.push(l); seen.add(l.id); } }); }catch(e){}
+  await purgeExpired();
   document.getElementById('hdrSub').textContent = '내 학습 자료';
   renderLibList();
   updateStuBanner();
+}
+/* 자동 삭제: 학생이 만든 나만의 영어 자료는 1시간 뒤 삭제 */
+const MYENG_TTL=3600000;
+async function purgeExpired(){
+  const now=Date.now();
+  const expired=(allLessons||[]).filter(l=> l && l.autoDelete && l.createdAt && (now-l.createdAt > MYENG_TTL));
+  for(const l of expired){ try{ await dbDelete(l.id); }catch(e){} try{ await idbDelete(l.id); }catch(e){} }
+  if(expired.length){ const ex=new Set(expired.map(l=>l.id)); allLessons=allLessons.filter(l=>!ex.has(l.id)); }
 }
 function renderLibList(){
   const box = document.getElementById('libList');
   const cnt = document.getElementById('libCount');
   if(allLessons.length===0){ box.innerHTML='<p class="small">아직 저장된 자료가 없습니다.</p>'; if(cnt) cnt.textContent=''; return; }
   const modeList=allLessons.filter(inMode);
-  if(modeList.length===0){ box.innerHTML='<p class="small">'+(libMode==='vocab'?'아직 만든 단어장이 없어요. 위의 “🔤 단어장 만들기”로 시작하세요.':(libMode==='conv'?'아직 회화 자료가 없어요.':'아직 독해 자료가 없어요.'))+'</p>'; if(cnt) cnt.textContent=''; return; }
+  if(modeList.length===0){ box.innerHTML='<p class="small">'+(libMode==='vocab'?'아직 만든 단어장이 없어요. 위의 “🔤 단어장 만들기”로 시작하세요.':(libMode==='conv'?'아직 회화 자료가 없어요.':(libMode==='myeng'?'아직 만든 자료가 없어요. 위의 “📷 사진으로 만들기”로 지문 사진을 올려보세요.':'아직 독해 자료가 없어요.')))+'</p>'; if(cnt) cnt.textContent=''; return; }
   const ordered=sortLessons(modeList);
   const shown=ordered.filter(l=>matchLesson(l,libQuery));
   const reorderable = !libQuery;
@@ -798,8 +841,11 @@ function renderLibList(){
     if(libQuery){ const q=libQuery.toLowerCase(); const hits=[]; (l.vocab||[]).forEach(v=>{ if((v.term||'').toLowerCase().includes(q)||(v.kr||'').toLowerCase().includes(q)) hits.push(v.term); }); if(hits.length) extra+='<div class="small" style="color:var(--accent2)">단어 매칭: '+html_escape(hits.slice(0,6).join(', '))+'</div>'; const sh=(l.sentences||[]).find(s=>(s.en||'').toLowerCase().includes(q)||(s.kr||'').toLowerCase().includes(q)); if(sh) extra+='<div class="small" style="color:var(--accent2)">문장 매칭: '+html_escape((sh.en||sh.kr).slice(0,60))+'…</div>'; }
     const isConv = l.type==='conversation';
     const isVoc = l.type==='vocab';
-    const badge = isVoc ? '<span class="libBadge" style="background:linear-gradient(135deg,#8b3cff,#ff5c9d);color:#fff">🔤 단어</span>' : (isConv ? '<span class="libBadge badge-conv">💬 회화</span>' : '<span class="libBadge badge-read">📖 읽기</span>');
-    const stat = isVoc ? ('단어 '+((l.words&&l.words.length)||0)+'개 · 문장 속 학습') : (isConv ? ('대사 '+l.sentences.length+'개 · '+((l.speakers&&l.speakers.length)||2)+'명 · '+(l.syncTimes?'✅ 연습 준비 완료':'⏱ 동기화 필요')) : ('문장 '+l.sentences.length+'개 · 단어 '+l.vocab.length+'개 · '+(l.syncTimes?'✅ 학습 준비 완료':'⏱ 동기화 필요')));
+    const isMyeng = l.type==='myeng';
+    const badge = isMyeng ? '<span class="libBadge" style="background:linear-gradient(135deg,#845ef7,#12d6a6);color:#fff">📷 나만의 영어</span>' : (isVoc ? '<span class="libBadge" style="background:linear-gradient(135deg,#8b3cff,#ff5c9d);color:#fff">🔤 단어</span>' : (isConv ? '<span class="libBadge badge-conv">💬 회화</span>' : '<span class="libBadge badge-read">📖 읽기</span>'));
+    let myengLeft='';
+    if(isMyeng && l.autoDelete && l.createdAt){ const mins=Math.max(0, Math.ceil((MYENG_TTL-(Date.now()-l.createdAt))/60000)); myengLeft=' · ⌛ '+mins+'분 후 자동 삭제'; }
+    const stat = isMyeng ? ('문장 '+((l.sentences&&l.sentences.length)||0)+'개 · 단어 '+((l.vocab&&l.vocab.length)||0)+'개'+myengLeft) : (isVoc ? ('단어 '+((l.words&&l.words.length)||0)+'개 · 문장 속 학습') : (isConv ? ('대사 '+l.sentences.length+'개 · '+((l.speakers&&l.speakers.length)||2)+'명 · '+(l.syncTimes?'✅ 연습 준비 완료':'⏱ 동기화 필요')) : ('문장 '+l.sentences.length+'개 · 단어 '+l.vocab.length+'개 · '+(l.syncTimes?'✅ 학습 준비 완료':'⏱ 동기화 필요'))));
     return '<div class="sentline" style="border:1px solid var(--line)">'+
     '<div class="en" style="font-weight:700;cursor:default">'+html_escape(l.title)+badge+'</div>'+
     '<div class="small">'+stat+'</div>'+extra+
@@ -809,6 +855,7 @@ function renderLibList(){
     '<button data-id="'+l.id+'" data-dir="1" class="moveBtn ghost teacher-only"'+(idx===shown.length-1?' disabled':'')+'>▼ 아래로</button>'):'')+
     '<button data-id="'+l.id+'" class="renameBtn ghost teacher-only">✏️ 이름</button>'+
     (isVoc?'':'<button data-id="'+l.id+'" class="printLibBtn ghost">🖖 PDF</button>')+
+    (isMyeng?'<button data-id="'+l.id+'" class="myengDelBtn ghost">삭제</button>':'')+
     '<button data-id="'+l.id+'" class="delBtn ghost teacher-only">삭제</button></div></div>';
   }).join('');
   box.querySelectorAll('.openBtn').forEach(b=> b.onclick=()=>openLesson(b.dataset.id));
@@ -816,6 +863,7 @@ function renderLibList(){
   box.querySelectorAll('.moveBtn').forEach(b=> b.onclick=()=>moveLesson(b.dataset.id, parseInt(b.dataset.dir)));
   box.querySelectorAll('.renameBtn').forEach(b=> b.onclick=async()=>{ const l=allLessons.find(x=>x.id===b.dataset.id); if(!l) return; const v=prompt('자료 이름 변경', l.title); if(v!==null && v.trim()){ l.title=v.trim(); try{await dbPut(l);}catch(e){} renderLibList(); } });
   box.querySelectorAll('.delBtn').forEach(b=> b.onclick=async()=>{ if(confirm('이 자료를 삭제할까요?')){ try{await dbDelete(b.dataset.id);}catch(e){} const ord=getOrder().filter(x=>x!==b.dataset.id); setOrder(ord); renderLibrary(); } });
+  box.querySelectorAll('.myengDelBtn').forEach(b=> b.onclick=async()=>{ if(confirm('이 자료를 삭제할까요?')){ try{await dbDelete(b.dataset.id);}catch(e){} try{await idbDelete(b.dataset.id);}catch(e){} renderLibrary(); } });
 }
 function openLesson(id){
   currentLesson = allLessons.find(l=>l.id===id);
@@ -833,7 +881,7 @@ document.getElementById('addNewBtn').onclick = ()=>{ pickedPdf=null; pickedMp3=n
 document.getElementById('backLib1').onclick = ()=> showScreen('screenLibrary');
 document.getElementById('backLib2').onclick = ()=> showScreen('screenLibrary');
 document.getElementById('backLib3').onclick = ()=>{ syncAudio.pause(); showScreen('screenLibrary'); };
-document.getElementById('toLibBtn').onclick = ()=>{ audio.pause(); try{ convStop(); convAudio.pause(); }catch(e){} showScreen('screenLibrary'); renderLibrary(); };
+document.getElementById('toLibBtn').onclick = ()=>{ audio.pause(); ttsReading=false; try{ window.speechSynthesis.cancel(); }catch(e){} try{ convStop(); convAudio.pause(); }catch(e){} showScreen('screenLibrary'); renderLibrary(); };
 document.getElementById('libSearch').oninput = (e)=>{ libQuery=e.target.value.trim(); renderLibList(); };
 document.getElementById('titleEditBtn').onclick = ()=>{ const cur=getAppTitle(); const v=prompt('학습기 제목을 입력하세요 (관리자).\n예: Reading Class 학습기', cur); if(v!==null){ const nv=v.trim(); if(nv){ localStorage.setItem('app_title',nv); applyAppTitle(); showTip('제목을 저장했어요.'); } } };
 
@@ -969,6 +1017,63 @@ document.getElementById('toSyncBtn').onclick = async ()=>{
   startSyncForCurrentLesson();
 };
 
+/* ---------- 나만의 영어: 사진 → OCR → 학습 자료 ---------- */
+let myEngFiles=[];
+document.getElementById('addMyEngBtn').onclick=()=>{
+  if(getRole()==='student'){
+    if(!activeStudent){ openStuModal(); return; }
+    if(activeStudent.status==='held'){ alert('이용이 정지된 계정입니다. 관리자에게 문의하세요.'); return; }
+    if(activeStudent.status!=='active'){ alert('아직 인증이 완료되지 않았어요. 학생번호로 다시 로그인해 주세요.'); return; }
+  }
+  myEngFiles=[];
+  document.getElementById('myEngTitle').value='';
+  document.getElementById('myEngImg').value='';
+  document.getElementById('myEngPreview').innerHTML='';
+  document.getElementById('myEngStatus').textContent='';
+  document.getElementById('myEngGoBtn').disabled=true;
+  showScreen('screenMyEng');
+};
+document.getElementById('myEngBackLib').onclick=()=>{ myEngFiles=[]; showScreen('screenLibrary'); };
+document.getElementById('myEngImg').onchange=(e)=>{
+  myEngFiles=Array.from(e.target.files||[]).filter(f=>/^image\//i.test(f.type));
+  const box=document.getElementById('myEngPreview'); box.innerHTML='';
+  myEngFiles.forEach(f=>{ const url=URL.createObjectURL(f); const img=document.createElement('img'); img.src=url; img.style.cssText='width:84px;height:84px;object-fit:cover;border-radius:10px;border:1px solid var(--line)'; img.onload=()=>URL.revokeObjectURL(url); box.appendChild(img); });
+  document.getElementById('myEngGoBtn').disabled = myEngFiles.length===0;
+  document.getElementById('myEngStatus').textContent = myEngFiles.length ? (myEngFiles.length+'장을 선택했어요.') : '';
+};
+document.getElementById('myEngGoBtn').onclick=async ()=>{
+  if(!myEngFiles.length){ return; }
+  const st=document.getElementById('myEngStatus');
+  const goBtn=document.getElementById('myEngGoBtn'); goBtn.disabled=true;
+  st.textContent='준비 중... 키 확인 중 🔑';
+  const _gk=await getGeminiKeyAuto();
+  if(!_gk){ st.textContent=''; goBtn.disabled=false; return; }
+  let sentences=[], vocab=[], titleFromAI='';
+  for(let fi=0; fi<myEngFiles.length; fi++){
+    st.textContent='사진 '+(fi+1)+'/'+myEngFiles.length+' 분석 중... (글자 읽는 중) 🤖';
+    let obj=null;
+    try{ obj=await geminiExtractReading(myEngFiles[fi], st); }catch(e){}
+    if(obj && Array.isArray(obj.sentences)){
+      if(!titleFromAI && obj.title) titleFromAI=obj.title;
+      obj.sentences.forEach(s=>{ const en=(s.en||'').trim(); if(en) sentences.push({en, kr:(s.kr||'').trim()}); });
+      (Array.isArray(obj.vocab)?obj.vocab:[]).forEach(v=>{ const term=(v.term||'').trim(); if(term && !vocab.some(x=>x.term.toLowerCase()===term.toLowerCase())) vocab.push({term, kr:(v.kr||'').trim()}); });
+    }
+  }
+  if(!sentences.length){
+    st.textContent='사진에서 영어 본문을 읽지 못했어요. 글자가 선명하게 보이도록 다시 찍어 주세요.';
+    goBtn.disabled=false; return;
+  }
+  const now=Date.now();
+  const isStu=getRole()!=='admin';
+  const title=(document.getElementById('myEngTitle').value||'').trim() || titleFromAI || ('나만의 영어 '+fmtDate(now));
+  currentLesson={ id:'m_'+now, type:'myeng', title:title, sentences:sentences, vocab:vocab, audio:null, syncTimes:null, createdAt:now,
+    custom:true, autoDelete:isStu, owner:(isStu && activeStudent)?activeStudent.id:'admin' };
+  try{ await dbPut(currentLesson); }catch(e){}
+  try{ await idbPut(Object.assign({}, currentLesson)); }catch(e){}
+  st.textContent='✅ 완성! 학습 화면으로 이동합니다.';
+  loadLessonIntoApp();
+};
+
 /* ---------- shared lesson state ---------- */
 let currentLesson=null, S=[], VOC=[];
 const audio = document.getElementById('audio');
@@ -979,6 +1084,7 @@ function buildRanges(times){ ranges = S.map((s,i)=>({start:times[i], end:times[i
 function loadLessonIntoApp(){
   S = currentLesson.sentences;
   VOC = currentLesson.vocab.slice().sort((a,b)=>b.term.length-a.term.length);
+  if(currentLesson.type==='myeng'){ enterStudyMode(); return; }
   audio.src = currentLesson.audio;
   document.getElementById('studyTitle').textContent = currentLesson.title;
   if(currentLesson.syncTimes && currentLesson.syncTimes.length===S.length+1){
@@ -1031,10 +1137,36 @@ document.getElementById('resetSyncBtn').onclick=()=>{ syncTimes=null; syncIdx=0;
 
 /* ---------- STUDY MODE ---------- */
 function enterStudyMode(){
+  ttsMode = (currentLesson.type==='myeng');
   document.getElementById('hdrSub').textContent = currentLesson.title;
   document.getElementById('studyTitle').textContent = currentLesson.title;
-  audio.src = currentLesson.audio;
+  const player = audio.parentElement;
+  const tabDict=document.getElementById('tabDict'), tabAdjust=document.getElementById('tabAdjust');
+  const resyncBtn=document.getElementById('resyncBtn'), wsync=document.getElementById('wsyncToggle'), ttsBtn=document.getElementById('ttsReadBtn');
   document.getElementById('tabConv').style.display='none';
+  ttsReading=false; try{window.speechSynthesis.cancel();}catch(e){}
+  if(ttsMode){
+    if(player) player.style.display='none';
+    if(tabDict) tabDict.style.display='none';
+    if(tabAdjust) tabAdjust.style.display='none';
+    if(resyncBtn) resyncBtn.style.display='none';
+    if(wsync) wsync.style.display='none';
+    if(ttsBtn){ ttsBtn.style.display='inline-block'; ttsBtn.textContent='🔊 본문 읽기'; }
+    ranges=[];
+    showScreen('screenStudy');
+    renderLines(); renderVocab();
+    document.getElementById('tabQuiz').style.display='inline-block'; resetQuizView();
+    { const p=document.getElementById('aiPanel'); if(p) p.style.display='none'; const b=document.getElementById('aiExplainBtn'); if(b) b.classList.remove('active'); renderAiNotes(currentLesson.aiNotes||null); }
+    activateTab('tabRead');
+    return;
+  }
+  if(player) player.style.display='';
+  if(tabDict) tabDict.style.display='';
+  if(tabAdjust) tabAdjust.style.display='';
+  if(resyncBtn) resyncBtn.style.display='';
+  if(wsync) wsync.style.display='';
+  if(ttsBtn) ttsBtn.style.display='none';
+  audio.src = currentLesson.audio;
   showScreen('screenStudy');
   buildRanges(syncTimes);
   renderLines(); renderVocab(); dictIdx=0; renderDictQuestion(); renderAdjustList();
@@ -1080,9 +1212,24 @@ function renderLines(){
 }
 let loopEnd=null, loopSentenceIdx=null;
 let wordSync=true, chunkMode=false;
-function startLoop(i){ loopSentenceIdx=i; audio.currentTime=ranges[i].start; loopEnd=ranges[i].end; audio.play(); renderLines(); if(dictIdx===i) document.getElementById('dictLoop').textContent='⏹ 이어듣기'; }
-function stopLoop(continuePlay){ loopSentenceIdx=null; if(continuePlay){ loopEnd=null; audio.play(); } renderLines(); const dl=document.getElementById('dictLoop'); if(dl) dl.textContent='🔁 반복'; }
-function playRange(i){ loopSentenceIdx=null; const r=ranges[i]; audio.currentTime=r.start; loopEnd=r.end; audio.play(); renderLines(); }
+let ttsMode=false, ttsReading=false;
+function ttsReadAll(){
+  const btn=document.getElementById('ttsReadBtn');
+  if(ttsReading){ ttsReading=false; try{window.speechSynthesis.cancel();}catch(e){} if(btn) btn.textContent='🔊 본문 읽기'; document.querySelectorAll('#lines .sentline.active').forEach(el=>el.classList.remove('active')); return; }
+  if(!S||!S.length) return;
+  ttsReading=true; if(btn) btn.textContent='⏹ 중지';
+  let i=0;
+  const step=()=>{
+    if(!ttsReading || i>=S.length){ ttsReading=false; if(btn) btn.textContent='🔊 본문 읽기'; document.querySelectorAll('#lines .sentline.active').forEach(el=>el.classList.remove('active')); return; }
+    document.querySelectorAll('#lines .sentline.active').forEach(el=>el.classList.remove('active'));
+    const el=document.getElementById('line'+i); if(el){ el.classList.add('active'); el.scrollIntoView({behavior:'smooth',block:'center'}); }
+    speakThen(S[i].en, ()=>{ i++; setTimeout(step, 180); });
+  };
+  step();
+}
+function startLoop(i){ if(ttsMode){ loopSentenceIdx=i; renderLines(); speak(S[i].en); return; } loopSentenceIdx=i; audio.currentTime=ranges[i].start; loopEnd=ranges[i].end; audio.play(); renderLines(); if(dictIdx===i) document.getElementById('dictLoop').textContent='⏹ 이어듣기'; }
+function stopLoop(continuePlay){ if(ttsMode){ loopSentenceIdx=null; try{window.speechSynthesis.cancel();}catch(e){} renderLines(); return; } loopSentenceIdx=null; if(continuePlay){ loopEnd=null; audio.play(); } renderLines(); const dl=document.getElementById('dictLoop'); if(dl) dl.textContent='🔁 반복'; }
+function playRange(i){ if(ttsMode){ loopSentenceIdx=null; renderLines(); speak(S[i].en); return; } loopSentenceIdx=null; const r=ranges[i]; audio.currentTime=r.start; loopEnd=r.end; audio.play(); renderLines(); }
 audio.ontimeupdate=()=>{
   if(loopEnd!==null && audio.currentTime>=loopEnd-0.03){ if(loopSentenceIdx!==null){ audio.currentTime=ranges[loopSentenceIdx].start; } else { audio.pause(); loopEnd=null; } }
   if(!ranges.length) return;
@@ -1326,6 +1473,26 @@ function ensureGeminiKey(){
   }
   return key;
 }
+/* 클라우드에 공유된 Gemini 키를 자동으로 받아와 이 기기에 캐시한다.
+   - 관리자가 한 번만 등록하면, 학생은 키를 입력할 필요가 없다.
+   - 클라우드 키가 없거나 로컬 모드이면 예전처럼 직접 입력(ensureGeminiKey)으로 되돌아간다. */
+async function cloudAutoLoadGeminiKey(){
+  try{
+    if(!_cloudOn) return;
+    const shared=await cloudGetSharedGeminiKey();
+    if(shared){ localStorage.setItem('gemini_key', shared); _geminiModelsCache=null; }
+  }catch(e){ /* 실패해도 무시: 필요 시 ensureGeminiKey가 처리 */ }
+}
+/* 사용 직전 키 확보: 로컬 캐시 → 클라우드 공유 키 → (최후) 직접 입력 */
+async function getGeminiKeyAuto(){
+  let key=(localStorage.getItem('gemini_key')||'').trim();
+  if(key) return key;
+  if(_cloudOn){
+    const shared=await cloudGetSharedGeminiKey();
+    if(shared){ localStorage.setItem('gemini_key', shared); _geminiModelsCache=null; return shared; }
+  }
+  return ensureGeminiKey();
+}
 // 키로 실제 사용 가능한 모델을 계정에서 직접 조회해 사용(모델명 세대교체로 인한 404 방지)
 let _geminiModelsCache=null;
 async function getGeminiModels(key){
@@ -1546,9 +1713,10 @@ function openPrintDialog(lesson){
   optQuiz.parentElement.style.opacity = hasQuiz ? '1' : '.45';
   const bothR=document.querySelector('input[name="printMode"][value="both"]'); if(bothR) bothR.checked=true;
   const isStudent = getRole()!=='admin';
+  const isMyOwn = printTargetLesson.type==='myeng';
   const perms = getStuPrintPerms();
-  if(isStudent && !perms.allow){ showTip('관리자가 PDF 출력을 허용하지 않았어요.'); return; }
-  applyPrintPerms(isStudent ? perms : null);
+  if(isStudent && !isMyOwn && !perms.allow){ showTip('관리자가 PDF 출력을 허용하지 않았어요.'); return; }
+  applyPrintPerms((isStudent && !isMyOwn) ? perms : null);
   document.getElementById('printModal').style.display='flex';
 }
 function closePrintDialog(){ document.getElementById('printModal').style.display='none'; }
@@ -1632,6 +1800,7 @@ function doPrint(){
   w.onload=()=>{ setTimeout(()=>{ w.focus(); w.print(); }, 250); };
 }
 document.getElementById('printBtn').onclick=()=>openPrintDialog(currentLesson);
+document.getElementById('ttsReadBtn').onclick=ttsReadAll;
 document.getElementById('printCancel').onclick=closePrintDialog;
 document.getElementById('printGo').onclick=doPrint;
 document.getElementById('printModal').onclick=(e)=>{ if(e.target.id==='printModal') closePrintDialog(); };
@@ -2028,6 +2197,42 @@ document.getElementById('admCloudLoginBtn').onclick=async()=>{
   await ensureAdminCloudAuth();
   const cs=document.getElementById('cloudStatus'); if(cs) cs.textContent=cloudStatusText();
 };
+document.getElementById('admGeminiKeyBtn').onclick=async()=>{
+  if(!(_cloudOn && CLOUD.adminEmail)){
+    alert('현재 로컬(기기 전용) 모드라 클라우드 키 공유가 필요 없어요.\n이 기기에서는 사진 분석 시 한 번만 키를 입력하면 브라우저에 저장됩니다.');
+    return;
+  }
+  await cloudAuthWait();
+  if(!_isAdminUser){ alert('먼저 “☁️ 클라우드 관리자 로그인”으로 로그인한 뒤에 키를 등록할 수 있어요.'); return; }
+  let cur=''; try{ cur=await cloudGetSharedGeminiKey()||''; }catch(e){}
+  const masked=cur ? (cur.slice(0,6)+'…'+cur.slice(-4)) : '(아직 없음)';
+  const inp=prompt('학생 공용 Gemini API 키를 입력하세요. (Google AI Studio → aistudio.google.com/apikey 에서 무료 발급)\n• 한 번 등록하면 모든 학생 기기가 자동으로 받아 쓰고, 학생은 다시 입력할 필요가 없어요.\n• 비워서 확인을 누르면 공용 키가 삭제됩니다.\n\n현재 등록된 키: '+masked, cur);
+  if(inp===null) return;
+  const nk=(inp||'').trim();
+  try{
+    await cloudSetSharedGeminiKey(nk);
+    if(nk){ localStorage.setItem('gemini_key', nk); _geminiModelsCache=null; showTip('공용 Gemini 키를 클라우드에 저장했어요. 이제 학생은 키 입력 없이 바로 사진 분석을 쓸 수 있어요.'); }
+    else{ localStorage.removeItem('gemini_key'); _geminiModelsCache=null; showTip('공용 Gemini 키를 삭제했어요.'); }
+  }catch(e){
+    const code=(e&&e.code)||(e&&e.message)||'';
+    /* 공용 Gemini 키는 reading_settings 컬렉션(doc 'shared')에 저장된다.
+       이 컬렉션이 Firestore 보안 규칙의 쓰기 허용 목록(allow-list)에 빠져 있으면,
+       관리자 인증이 되어 있어도 permission-denied가 난다. (자료/학생용 컬렉션만
+       허용하고 reading_settings는 빠뜨린 경우) 원인을 정확히 안내한다. */
+    if(code==='permission-denied'){
+      if(nk){ localStorage.setItem('gemini_key', nk); _geminiModelsCache=null; }
+      else { localStorage.removeItem('gemini_key'); _geminiModelsCache=null; }
+      alert('공용 키를 클라우드에 저장하지 못했어요 (permission-denied).\n\n'+
+            '관리자 인증은 되어 있지만, Firestore 보안 규칙에 “reading_settings”\n'+
+            '컬렉션의 쓰기 권한이 빠져 있어서 그렇습니다.\n\n'+
+            'Firebase 콘솔 → Firestore Database → 규칙(Rules) 에서\n'+
+            'reading_settings 컬렉션(읽기: 로그인 사용자 / 쓰기: 관리자)을 추가하면 해결됩니다.\n\n'+
+            '※ 규칙을 추가하기 전까지는 이 기기에만 키가 저장되어 사용됩니다.');
+    } else {
+      alert('키 저장에 실패했어요.\n'+authErrMsg(code));
+    }
+  }
+};
 document.getElementById('admChangePinBtn').onclick=async()=>{
   if(_cloudOn && CLOUD.adminEmail){
     await cloudAuthWait();
@@ -2227,21 +2432,23 @@ document.getElementById('roleSwitchBtn').onclick=()=>{
 
 /* ================= 모드 허브 + 단어학습 ================= */
 let libMode='read';
-function inMode(l){ const t=l.type; if(libMode==='conv') return t==='conversation'; if(libMode==='vocab') return t==='vocab'; return t!=='conversation' && t!=='vocab'; }
+function inMode(l){ const t=l.type; if(libMode==='conv') return t==='conversation'; if(libMode==='vocab') return t==='vocab'; if(libMode==='myeng') return t==='myeng'; return t!=='conversation' && t!=='vocab' && t!=='myeng'; }
 function showHub(){ const hello=document.getElementById('hubHello'); if(hello) hello.textContent=(getRole()==='student' && activeStudent && activeStudent.name)?(activeStudent.name+'님, 무엇을 공부할까요?'):'무엇을 공부할까요?'; showScreen('screenHub'); }
 function enterMode(mode){
   libMode=mode;
   const t=document.getElementById('libTitle');
-  if(t) t.textContent = mode==='read'?'📖 독해 연습 자료':(mode==='conv'?'💬 회화 연습 자료':'🔤 단어 학습 단어장');
-  const addR=document.getElementById('addNewBtn'), addC=document.getElementById('addConvBtn'), addV=document.getElementById('addVocBtn');
+  if(t) t.textContent = mode==='read'?'📖 독해 연습 자료':(mode==='conv'?'💬 회화 연습 자료':(mode==='myeng'?'📷 나만의 영어 자료':'🔤 단어 학습 단어장'));
+  const addR=document.getElementById('addNewBtn'), addC=document.getElementById('addConvBtn'), addV=document.getElementById('addVocBtn'), addM=document.getElementById('addMyEngBtn');
   if(addR) addR.style.display=(mode==='read')?'':'none';
   if(addC) addC.style.display=(mode==='conv')?'':'none';
   if(addV) addV.style.display=(mode==='vocab')?'':'none';
+  if(addM) addM.style.display=(mode==='myeng')?'':'none';
   libQuery=''; const ls=document.getElementById('libSearch'); if(ls) ls.value='';
   renderLibList();
   showScreen('screenLibrary');
 }
 document.querySelectorAll('.hubCard').forEach(b=> b.onclick=()=>enterMode(b.dataset.mode));
+setInterval(async ()=>{ try{ const lib=document.getElementById('screenLibrary'); if(lib && lib.style.display!=='none' && (allLessons||[]).some(l=>l && l.autoDelete)){ await purgeExpired(); renderLibList(); } }catch(e){} }, 60000);
 document.getElementById('libBackHubBtn').onclick=()=>showHub();
 
 function speak(text){ try{ if(!('speechSynthesis' in window)){ showTip('이 브라우저는 음성 읽기를 지원하지 않아요.'); return; } window.speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(text); u.lang='en-US'; u.rate=0.95; window.speechSynthesis.speak(u); }catch(e){} }
@@ -2574,6 +2781,7 @@ document.getElementById('importFile').onchange=(e)=>{
   cloudInit();
   applyAppTitle();
   await seedIfEmpty();
+  await cloudAutoLoadGeminiKey();
   await restoreActiveStudent();
   let role=getRole();
   if(role==='admin'){
